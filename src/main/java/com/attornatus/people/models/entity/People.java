@@ -31,7 +31,6 @@ public class People  implements Serializable {
     @Past
     private LocalDate birthDate;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER)
     private List<Address> addresses = new ArrayList<>();
 }
