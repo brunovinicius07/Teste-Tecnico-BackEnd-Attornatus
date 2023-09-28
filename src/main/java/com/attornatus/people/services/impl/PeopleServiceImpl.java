@@ -9,6 +9,7 @@ import com.attornatus.people.repositories.PeopleRepository;
 import com.attornatus.people.services.PeopleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -102,5 +103,16 @@ public class PeopleServiceImpl implements PeopleService {
         peopleRepository.delete(people);
 
         return "Pessoa com ID " + idPerson + " excluído com sucesso!";
+    }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void updateMainAddress(Long idPeople, boolean mainAdress){
+
+        People people = validatePeople(idPeople);
+
+        if (mainAdress) {
+            people.getAddresses().forEach(a -> a.setMainAddress(false));
+            this.peopleRepository.save(people);
+        }
     }
 }

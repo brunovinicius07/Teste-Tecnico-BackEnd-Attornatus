@@ -17,7 +17,7 @@ public class AddressRequestDto {
 
     private String city;
 
-    private Long idPerson;
+    private Long idPeople;
 
     private boolean mainAddress;
 }
