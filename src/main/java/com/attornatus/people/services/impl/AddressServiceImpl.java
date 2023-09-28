@@ -34,6 +34,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto registerAddress(AddressRequestDto addressRequestDto) {
+
         People people = peopleServiceimpl.validatePeople(addressRequestDto.getIdPeople());
         peopleServiceimpl.updateMainAddress(addressRequestDto.getIdPeople(), addressRequestDto.isMainAddress());
         Address address = addressMapper.toAddress(addressRequestDto);
@@ -47,11 +48,13 @@ public class AddressServiceImpl implements AddressService {
     public List<AddressResponseDto> getAllAddress() {
 
         List<Address> addressList = validateListAddress();
+
         return addressList.stream().map(addressMapper::toAddressResponseDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<Address> validateListAddress(){
+
         List<Address>addresList = addressRepository.findAll();
 
         if (addresList.isEmpty()){
@@ -90,7 +93,9 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto) {
+
         Address address = validateAddres(idAddress);
+
         address.setPublicPlace(addressRequestDto.getPublicPlace() != null ? addressRequestDto.getPublicPlace() : address.getPublicPlace());
         address.setZipCode(addressRequestDto.getZipCode() != null ? addressRequestDto.getZipCode() : address.getZipCode());
         address.setNumber(addressRequestDto.getNumber() != null ? addressRequestDto.getNumber() : address.getNumber());
@@ -102,6 +107,17 @@ public class AddressServiceImpl implements AddressService {
         address.setMainAddress(addressRequestDto.isMainAddress());
 
         return addressMapper.toAddressResponseDto(addressRepository.save(address));
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public String deleteAddres(Long idAddress) {
+
+        Address address = validateAddres(idAddress);
+
+        addressRepository.delete(address);
+
+        return "Endereço com o ID " + idAddress + " excluido com sucesso!";
     }
 
 
