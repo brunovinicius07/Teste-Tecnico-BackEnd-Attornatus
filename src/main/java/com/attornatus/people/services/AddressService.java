@@ -9,4 +9,6 @@ public interface AddressService {
     AddressResponseDto registerAddress(AddressRequestDto addressRequestDto);
 
     List<AddressResponseDto> getAllAddress();
+
+    AddressResponseDto getAddresById(Long idAddress);
 }

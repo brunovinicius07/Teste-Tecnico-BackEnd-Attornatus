@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,6 +62,29 @@ public class AddressServiceImpl implements AddressService {
             );
         }
         return addresList;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AddressResponseDto getAddresById(Long idAddress) {
+
+        Address address = validateAddres(idAddress);
+
+        return addressMapper.toAddressResponseDto(address);
+    }
+
+    @Transactional(readOnly = true)
+    public Address validateAddres(Long cdAddres){
+        Optional<Address> optionalAddres = addressRepository.findById(cdAddres);
+
+        if(optionalAddres.isEmpty()){
+            throw new AlertException(
+                    "warn",
+                    String.format("Endereço com id %S não cadastrado!" , cdAddres),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        return optionalAddres.get();
     }
 
 
