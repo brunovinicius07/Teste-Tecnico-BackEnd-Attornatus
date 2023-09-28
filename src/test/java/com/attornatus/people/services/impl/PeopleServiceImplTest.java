@@ -16,12 +16,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.yaml.snakeyaml.events.Event;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PeopleServiceImplTest {
@@ -64,8 +67,8 @@ class PeopleServiceImplTest {
 
     @Test
     void whenFindByIdThenReturnAnPeopleInstance() {
-        Mockito.when(peopleRepository.findById(Mockito.anyLong())).thenReturn(optionalPeople);
-        Mockito.when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(optionalPeople);
+        when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
 
         PeopleResponseDto response = peopleServiceImpl.getPeopleById(ID);
 
@@ -75,6 +78,19 @@ class PeopleServiceImplTest {
         Assertions.assertEquals(NAME, response.getName());
         Assertions.assertEquals(BIRTH_DATE, response.getBirthDate());
         Assertions.assertEquals(ADDRESSES, response.getAddresses());
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException(){
+        String errorMessage = String.format("Pessoa com id %d não cadastrado!", ID);
+        when(peopleRepository.findById(Mockito.anyLong())).thenThrow(new RuntimeException(errorMessage));
+
+        try{
+            peopleServiceImpl.getPeopleById(ID);
+        } catch (Exception ex){
+            Assertions.assertEquals(RuntimeException.class, ex.getClass());
+            Assertions.assertEquals(errorMessage, ex.getMessage());
+        }
     }
 
     @Test
