@@ -87,5 +87,22 @@ public class AddressServiceImpl implements AddressService {
         return optionalAddres.get();
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto) {
+        Address address = validateAddres(idAddress);
+        address.setPublicPlace(addressRequestDto.getPublicPlace() != null ? addressRequestDto.getPublicPlace() : address.getPublicPlace());
+        address.setZipCode(addressRequestDto.getZipCode() != null ? addressRequestDto.getZipCode() : address.getZipCode());
+        address.setNumber(addressRequestDto.getNumber() != null ? addressRequestDto.getNumber() : address.getNumber());
+        address.setCity(addressRequestDto.getCity() != null ? addressRequestDto.getCity() : address.getCity());
+        address.getPeople().setIdPeople(addressRequestDto.getIdPeople() != null ? addressRequestDto.getIdPeople() : address.getPeople().getIdPeople());
+
+        peopleServiceimpl.updateMainAddress(addressRequestDto.getIdPeople(), addressRequestDto.isMainAddress());
+
+        address.setMainAddress(addressRequestDto.isMainAddress());
+
+        return addressMapper.toAddressResponseDto(addressRepository.save(address));
+    }
+
 
 }
