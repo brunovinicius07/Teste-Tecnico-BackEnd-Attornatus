@@ -13,4 +13,6 @@ public interface PeopleService {
     PeopleResponseDto getPeopleById(Long idPeople);
 
     PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto);
+
+    String deletePeople(Long idPerson);
 }

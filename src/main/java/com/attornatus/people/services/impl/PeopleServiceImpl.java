@@ -84,11 +84,23 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = false)
     public PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto) {
+
         People people = validatePeople(idPeople);
 
         people.setName(peopleRequestDto.getName() != null ? peopleRequestDto.getName() : people.getName());
         people.setBirthDate(peopleRequestDto.getBirthDate() != null ? peopleRequestDto.getBirthDate() : people.getBirthDate());
 
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public String deletePeople(Long idPerson) {
+
+        People people = validatePeople(idPerson);
+
+        peopleRepository.delete(people);
+
+        return "Pessoa com ID " + idPerson + " excluído com sucesso!";
     }
 }
