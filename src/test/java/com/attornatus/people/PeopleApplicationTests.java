@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PeopleApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void main() {
+		PeopleApplication.main(new String[] {});
 	}
 
 }
