@@ -9,4 +9,6 @@ public interface PeopleService {
     PeopleResponseDto registerPeople(PeopleRequestDto peopleRequestDto);
 
     List<PeopleResponseDto> getAllPeople();
+
+    PeopleResponseDto getPeopleById(Long idPeople);
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PeopleResponseDto {
 
-    private Long idPerson;
+    private Long idPeople;
 
     private String name;
 

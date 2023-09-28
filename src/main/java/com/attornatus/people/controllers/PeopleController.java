@@ -26,4 +26,9 @@ public class PeopleController {
     public ResponseEntity<Object> getAllPeople(){
         return ResponseEntity.ok(peopleService.getAllPeople());
     }
+
+    @GetMapping("/{idPeople}")
+    public ResponseEntity<Object> getPeopleById(@PathVariable Long idPeople){
+        return ResponseEntity.ok(peopleService.getPeopleById(idPeople));
+    }
 }

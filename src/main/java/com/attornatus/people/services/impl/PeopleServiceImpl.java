@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,5 +55,29 @@ public class PeopleServiceImpl implements PeopleService {
             );
         }
         return peopleList;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PeopleResponseDto getPeopleById(Long idPeople) {
+
+        People people = validatePeople(idPeople);
+
+        return peopleMapper.toPeopleResponseDto(people);
+    }
+
+    @Transactional(readOnly = true)
+    public People validatePeople(Long idPeople){
+
+        Optional<People> optionalPeople = peopleRepository.findById(idPeople);
+
+        if(optionalPeople.isEmpty()){
+            throw new AlertException(
+                    "warn",
+                    String.format("Pessoa com id %S não cadastrado!" , idPeople),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        return optionalPeople.get();
     }
 }
