@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class PeopleServiceImpl implements PeopleService {
 
     public final PeopleRepository peopleRepository;
-
     public final PeopleMapper peopleMapper;
 
     public PeopleServiceImpl(PeopleRepository peopleRepository, PeopleMapper peopleMapper) {
@@ -31,13 +30,13 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = false)
     public PeopleResponseDto registerPeople(PeopleRequestDto peopleRequestDto) {
+
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(peopleMapper.toPeople(peopleRequestDto)));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PeopleResponseDto> getAllPeople() {
-
         List<People> peopleList = validateListPeople();
 
         return peopleList.stream().map(peopleMapper::toPeopleResponseDto).collect(Collectors.toList());
@@ -45,7 +44,6 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Transactional(readOnly = true)
     public List<People> validateListPeople(){
-
         List<People> peopleList = peopleRepository.findAll();
 
         if(peopleList.isEmpty()){
@@ -61,7 +59,6 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = true)
     public PeopleResponseDto getPeopleById(Long idPeople) {
-
         People people = validatePeople(idPeople);
 
         return peopleMapper.toPeopleResponseDto(people);
@@ -69,7 +66,6 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Transactional(readOnly = true)
     public People validatePeople(Long idPeople){
-
         Optional<People> optionalPeople = peopleRepository.findById(idPeople);
 
         if(optionalPeople.isEmpty()){
@@ -85,11 +81,10 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = false)
     public PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto) {
-
         People people = validatePeople(idPeople);
 
-        people.setName(peopleRequestDto.getName() != null ? peopleRequestDto.getName() : people.getName());
-        people.setBirthDate(peopleRequestDto.getBirthDate() != null ? peopleRequestDto.getBirthDate() : people.getBirthDate());
+        people.setName(peopleRequestDto.getName());
+        people.setBirthDate(peopleRequestDto.getBirthDate());
 
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
     }
@@ -97,9 +92,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = false)
     public String deletePeople(Long idPerson) {
-
         People people = validatePeople(idPerson);
-
         peopleRepository.delete(people);
 
         return "Pessoa com ID " + idPerson + " excluído com sucesso!";
@@ -107,9 +100,8 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void updateMainAddress(Long idPeople, boolean mainAdress){
-
         People people = validatePeople(idPeople);
-
+        
         if (mainAdress) {
             people.getAddresses().forEach(a -> a.setMainAddress(false));
             this.peopleRepository.save(people);

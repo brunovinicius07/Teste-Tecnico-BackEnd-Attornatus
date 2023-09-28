@@ -20,12 +20,11 @@ import java.util.stream.Collectors;
 public class AddressServiceImpl implements AddressService {
 
     private final PeopleServiceImpl peopleServiceimpl;
-
     private final AddressMapper addressMapper;
-
     private final AddressRepository addressRepository;
 
-    public AddressServiceImpl(PeopleServiceImpl peopleServiceimpl, AddressMapper addressMapper, AddressRepository addressRepository) {
+    public AddressServiceImpl(PeopleServiceImpl peopleServiceimpl, AddressMapper addressMapper,
+                              AddressRepository addressRepository) {
         this.peopleServiceimpl = peopleServiceimpl;
         this.addressMapper = addressMapper;
         this.addressRepository = addressRepository;
@@ -34,9 +33,9 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto registerAddress(AddressRequestDto addressRequestDto) {
-
         People people = peopleServiceimpl.validatePeople(addressRequestDto.getIdPeople());
         peopleServiceimpl.updateMainAddress(addressRequestDto.getIdPeople(), addressRequestDto.isMainAddress());
+
         Address address = addressMapper.toAddress(addressRequestDto);
         address.setPeople(people);
 
@@ -46,7 +45,6 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = true)
     public List<AddressResponseDto> getAllAddress() {
-
         List<Address> addressList = validateListAddress();
 
         return addressList.stream().map(addressMapper::toAddressResponseDto).collect(Collectors.toList());
@@ -54,7 +52,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional(readOnly = true)
     public List<Address> validateListAddress(){
-
         List<Address>addresList = addressRepository.findAll();
 
         if (addresList.isEmpty()){
@@ -70,7 +67,6 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = true)
     public AddressResponseDto getAddresById(Long idAddress) {
-
         Address address = validateAddres(idAddress);
 
         return addressMapper.toAddressResponseDto(address);
@@ -93,14 +89,13 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto) {
-
         Address address = validateAddres(idAddress);
 
-        address.setPublicPlace(addressRequestDto.getPublicPlace() != null ? addressRequestDto.getPublicPlace() : address.getPublicPlace());
-        address.setZipCode(addressRequestDto.getZipCode() != null ? addressRequestDto.getZipCode() : address.getZipCode());
-        address.setNumber(addressRequestDto.getNumber() != null ? addressRequestDto.getNumber() : address.getNumber());
-        address.setCity(addressRequestDto.getCity() != null ? addressRequestDto.getCity() : address.getCity());
-        address.getPeople().setIdPeople(addressRequestDto.getIdPeople() != null ? addressRequestDto.getIdPeople() : address.getPeople().getIdPeople());
+        address.setPublicPlace(addressRequestDto.getPublicPlace());
+        address.setZipCode(addressRequestDto.getZipCode());
+        address.setNumber(addressRequestDto.getNumber());
+        address.setCity(addressRequestDto.getCity());
+        address.getPeople().setIdPeople(addressRequestDto.getIdPeople());
 
         peopleServiceimpl.updateMainAddress(addressRequestDto.getIdPeople(), addressRequestDto.isMainAddress());
 
@@ -112,7 +107,6 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public String deleteAddres(Long idAddress) {
-
         Address address = validateAddres(idAddress);
 
         addressRepository.delete(address);

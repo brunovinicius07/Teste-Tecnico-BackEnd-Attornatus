@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "peoples")
+@RequestMapping(value = "people")
 public class PeopleController {
 
     private final PeopleService peopleService;
@@ -33,7 +33,8 @@ public class PeopleController {
     }
 
     @PutMapping("/{idPeople}")
-    public ResponseEntity<Object> updatePeople(@PathVariable Long idPeople, @RequestBody @Valid PeopleRequestDto peopleRequestDto){
+    public ResponseEntity<Object> updatePeople(@PathVariable Long idPeople, @RequestBody
+                                               @Valid PeopleRequestDto peopleRequestDto){
         return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleRequestDto));
     }
 
@@ -41,5 +42,4 @@ public class PeopleController {
     public ResponseEntity<Object> deletePeople(@PathVariable Long idPerson){
         return ResponseEntity.ok(peopleService.deletePeople(idPerson));
     }
-
 }
