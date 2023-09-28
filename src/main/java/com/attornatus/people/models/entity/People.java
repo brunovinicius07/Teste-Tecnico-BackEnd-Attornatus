@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "tb_people")
-public class People  implements Serializable {
+public class People implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
