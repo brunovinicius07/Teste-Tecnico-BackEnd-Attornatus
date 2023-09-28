@@ -11,4 +11,6 @@ public interface PeopleService {
     List<PeopleResponseDto> getAllPeople();
 
     PeopleResponseDto getPeopleById(Long idPeople);
+
+    PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto);
 }

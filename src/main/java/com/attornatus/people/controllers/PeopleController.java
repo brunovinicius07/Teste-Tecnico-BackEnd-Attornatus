@@ -31,4 +31,10 @@ public class PeopleController {
     public ResponseEntity<Object> getPeopleById(@PathVariable Long idPeople){
         return ResponseEntity.ok(peopleService.getPeopleById(idPeople));
     }
+
+    @PutMapping("/{idPeople}")
+    public ResponseEntity<Object> updatePeople(@PathVariable Long idPeople, @RequestBody @Valid PeopleRequestDto peopleRequestDto){
+        return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleRequestDto));
+    }
+
 }

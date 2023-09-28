@@ -80,4 +80,15 @@ public class PeopleServiceImpl implements PeopleService {
         }
         return optionalPeople.get();
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto) {
+        People people = validatePeople(idPeople);
+
+        people.setName(peopleRequestDto.getName() != null ? peopleRequestDto.getName() : people.getName());
+        people.setBirthDate(peopleRequestDto.getBirthDate() != null ? peopleRequestDto.getBirthDate() : people.getBirthDate());
+
+        return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
+    }
 }
