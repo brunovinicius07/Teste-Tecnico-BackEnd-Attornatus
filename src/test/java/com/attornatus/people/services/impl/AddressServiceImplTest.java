@@ -2,7 +2,6 @@ package com.attornatus.people.services.impl;
 
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.AddressResponseDto;
-import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.Address;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.AddressMapper;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,6 +115,17 @@ class AddressServiceImplTest {
         assertEquals(PEOPLE, response.get(INDEX).getPeople());
 
         verify(addressRepository, times(1)).findAll();
+    }
+
+    @Test
+    void whenValidateListThenReturnAnListOfAddress(){
+        when(addressRepository.findAll()).thenReturn(Collections.emptyList());
+
+        try{
+            addressServiceImpl.validateListAddress();
+        } catch (Exception ex){
+            assertEquals("Nenhum endereço encontrado!", ex.getMessage());
+        }
     }
 
     @Test

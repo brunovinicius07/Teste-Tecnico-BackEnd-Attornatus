@@ -57,7 +57,7 @@ public class AddressServiceImpl implements AddressService {
         if (addresList.isEmpty()){
             throw new AlertException(
                     "warn",
-                    "Nenhum enredeço encontrado!",
+                    "Nenhum endereço encontrado!",
                     HttpStatus.NOT_FOUND
             );
         }

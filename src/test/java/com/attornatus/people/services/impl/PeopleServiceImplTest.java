@@ -173,8 +173,6 @@ class PeopleServiceImplTest {
         assertEquals(ADDRESSES, response.getAddresses());
 
         verify(peopleRepository, times(1)).findById(ID);
-
-
     }
 
     @Test
