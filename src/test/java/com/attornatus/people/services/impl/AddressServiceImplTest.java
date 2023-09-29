@@ -180,7 +180,14 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void updateAddress() {
+    void whenValidateAddressThenRuntimeException(){
+        when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
+
+        try{
+            addressServiceImpl.validateAddres(ID_ADDRESS);
+        } catch (Exception ex){
+            assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
+        }
     }
 
     @Test
