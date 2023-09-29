@@ -20,4 +20,6 @@ public class AddressResponseDto {
     private String city;
 
     private boolean mainAddress;
+
+    private Long idPeople;
 }

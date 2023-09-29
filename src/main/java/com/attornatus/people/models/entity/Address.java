@@ -43,12 +43,12 @@ public class Address implements Serializable {
     @NotBlank
     private String city;
 
+    @NotNull
+    private boolean mainAddress;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_people")
     @NotNull
     private People people;
-
-    @NotNull
-    private boolean mainAddress;
 }
