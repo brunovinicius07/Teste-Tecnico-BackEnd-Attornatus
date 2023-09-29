@@ -2,6 +2,7 @@ package com.attornatus.people.services.impl;
 
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.AddressResponseDto;
+import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.Address;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.AddressMapper;
@@ -75,7 +76,24 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void getAllAddress() {
+    void whenFindAllThenReturnAnListOfAddress(){
+        when(addressRepository.findAll()).thenReturn(List.of(address));
+        when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
+
+        List<AddressResponseDto> response = addressServiceImpl.getAllAddress();
+
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(AddressResponseDto.class, response.get(INDEX).getClass());
+
+        assertEquals(ID_ADDRESS, response.get(INDEX).getIdAddress());
+        assertEquals(PUBLIC_PLACE, response.get(INDEX).getPublicPlace());
+        assertEquals(ZIP_CODE, response.get(INDEX).getZipCode());
+        assertEquals(NUMBER, response.get(INDEX).getNumber());
+        assertEquals(CITY, response.get(INDEX).getCity());
+        assertEquals(MAIN_ADDRESS, response.get(INDEX).isMainAddress());
+        assertEquals(ID_PEOPLE, response.get(INDEX).getIdPeople());
     }
 
     @Test
