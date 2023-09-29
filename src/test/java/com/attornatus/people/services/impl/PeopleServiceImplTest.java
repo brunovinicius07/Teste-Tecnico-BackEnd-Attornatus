@@ -149,7 +149,7 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenReturnAnObjectNotFoundException(){
+    void whenFindByIdThenRuntimeException(){
         String errorMessage = String.format("Pessoa com id %d não cadastrado!", ID);
         when(peopleRepository.findById(Mockito.anyLong())).thenThrow(new RuntimeException(errorMessage));
 
@@ -175,6 +175,17 @@ class PeopleServiceImplTest {
         verify(peopleRepository, times(1)).findById(ID);
 
 
+    }
+
+    @Test
+    void whenValidatePeopleThenRuntimeException(){
+        when(peopleRepository.findById(ID)).thenReturn(optionalPeople);
+
+        try{
+            peopleServiceImpl.validatePeople(ID);
+        } catch (Exception ex){
+            assertEquals("Pessoa com id " + ID + " não cadastrado!", ex.getMessage());
+        }
     }
 
     @Test
@@ -210,7 +221,7 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void deleteWithSuccess() {
+    void whenDeleteWithSuccess() {
         when(peopleRepository.findById(ID)).thenReturn(optionalPeople);
         String result = peopleServiceImpl.deletePeople(ID);
         assertEquals("Pessoa com ID " + ID + " excluído com sucesso!", result);
@@ -218,7 +229,7 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void deleteWithAlertException(){
+    void whenDeleteWithAlertException(){
         when(peopleRepository.findById(anyLong())).thenThrow(new RuntimeException("Pessoa com id " + ID +" não cadastrada!"));
         try {
             peopleServiceImpl.deletePeople(ID);
@@ -228,7 +239,22 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void updateMainAddress() {
+    void whenUpdateMainAddressSuccess() {
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
+        Address mainAddress = new Address();
+        mainAddress.setMainAddress(true);
+        people.getAddresses().add(mainAddress);
+
+        People pesponse = peopleServiceImpl.validatePeople(ID);
+
+        assertNotNull(pesponse);
+
+        assertEquals(ID, pesponse.getIdPeople());
+        assertEquals(NAME, pesponse.getName());
+        assertEquals(BIRTH_DATE, pesponse.getBirthDate());
+        assertEquals(ADDRESSES, pesponse.getAddresses());
+
+        verify(peopleRepository, times(1)).findById(ID);
     }
 
     private void startPeople(){
