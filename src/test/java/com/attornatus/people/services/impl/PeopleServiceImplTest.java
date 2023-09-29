@@ -155,6 +155,21 @@ class PeopleServiceImplTest {
     }
 
     @Test
+    void whenUpdateThenReturnAnDataIntegrityViolationException(){
+        String errorMessage = String.format("Pessoa com id %d não cadastrado!", ID);
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(optionalPeople);
+        when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+
+        try{
+            optionalPeople.get().setIdPeople(2L);
+            peopleServiceImpl.registerPeople(peopleRequestDto);
+        } catch (Exception ex){
+            assertEquals(RuntimeException.class, ex.getMessage());
+            assertEquals(errorMessage, ex.getMessage());
+        }
+    }
+
+    @Test
     void deletePeople() {
     }
 
