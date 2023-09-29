@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class PeopleServiceImplTest {
@@ -170,7 +170,11 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void deletePeople() {
+    void deleteWithSuccess() {
+        when(peopleRepository.findById(ID)).thenReturn(optionalPeople);
+        String result = peopleServiceImpl.deletePeople(ID);
+        assertEquals("Pessoa com ID " + ID + " excluído com sucesso!", result);
+        verify(peopleRepository, times(1)).delete(people);
     }
 
     @Test
