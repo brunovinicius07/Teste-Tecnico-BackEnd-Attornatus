@@ -32,6 +32,7 @@ class AddressServiceImplTest {
     public static final String NAME             = "João";
     public static final LocalDate DATE          = LocalDate.of(1997, 7, 15);
     public static final List<Address> ADDRESSES = new ArrayList<>();
+    public static final People PEOPLE = (new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
 
     public static final long ID_ADDRESS         = 1L;
     public static final String PUBLIC_PLACE     = "Rua 1";
@@ -97,7 +98,23 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void validateListAddress() {
+    void whenValidateListAddressSuccess() {
+        List<Address> addressList = new ArrayList<>();
+        addressList.add(address);
+        when(addressRepository.findAll()).thenReturn(addressList);
+
+        when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
+        List<Address> response = addressServiceImpl.validateListAddress();
+
+        assertEquals(ID_ADDRESS, response.get(INDEX).getIdAddress());
+        assertEquals(PUBLIC_PLACE, response.get(INDEX).getPublicPlace());
+        assertEquals(ZIP_CODE, response.get(INDEX).getZipCode());
+        assertEquals(NUMBER, response.get(INDEX).getNumber());
+        assertEquals(CITY, response.get(INDEX).getCity());
+        assertEquals(MAIN_ADDRESS, response.get(INDEX).isMainAddress());
+        assertEquals(PEOPLE, response.get(INDEX).getPeople());
+
+        verify(addressRepository, times(1)).findAll();
     }
 
     @Test
@@ -146,7 +163,6 @@ class AddressServiceImplTest {
     }
 
     private void startPeople(){
-        peopleOptional = Optional.of(new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
         people = new People(ID_PEOPLE, NAME, DATE, ADDRESSES);
         address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people );
         addressResponseDto = new AddressResponseDto(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE);
