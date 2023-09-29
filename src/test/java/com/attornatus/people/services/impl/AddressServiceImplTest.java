@@ -162,7 +162,21 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void validateAddres() {
+    void whenValidatePeopleWithSuccess() {
+        when(addressRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(address));
+        Address response = addressServiceImpl.validateAddres(ID_ADDRESS);
+
+        assertNotNull(response);
+        assertEquals(ID_ADDRESS, response.getIdAddress());
+
+        assertEquals(PUBLIC_PLACE, response.getPublicPlace());
+        assertEquals(ZIP_CODE, response.getZipCode());
+        assertEquals(NUMBER, response.getNumber());
+        assertEquals(CITY, response.getCity());
+        assertEquals(MAIN_ADDRESS, response.isMainAddress());
+        assertEquals(PEOPLE, response.getPeople());
+
+        verify(addressRepository, times(1)).findById(ID_ADDRESS);
     }
 
     @Test
