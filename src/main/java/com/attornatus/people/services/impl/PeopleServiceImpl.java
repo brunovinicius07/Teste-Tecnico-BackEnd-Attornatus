@@ -7,7 +7,6 @@ import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.PeopleMapper;
 import com.attornatus.people.repositories.PeopleRepository;
 import com.attornatus.people.services.PeopleService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

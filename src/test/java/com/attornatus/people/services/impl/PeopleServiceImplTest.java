@@ -1,11 +1,11 @@
 package com.attornatus.people.services.impl;
 
+import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.Address;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.PeopleMapper;
 import com.attornatus.people.repositories.PeopleRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -41,6 +42,7 @@ class PeopleServiceImplTest {
     private PeopleMapper peopleMapper;
 
     private PeopleResponseDto peopleResponseDto;
+    private PeopleRequestDto peopleRequestDto;
     private Optional<People> optionalPeople;
     private People people;
 
@@ -51,7 +53,19 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void registerPeople() {
+    void whenCreateThenReturnSucess() {
+        when(peopleRepository.save(Mockito.any())).thenReturn(people);
+        when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+
+
+        PeopleResponseDto response = peopleServiceImpl.registerPeople(peopleRequestDto);
+
+        assertNotNull(response);
+        assertEquals(PeopleResponseDto.class, response.getClass());
+        assertEquals(ID, response.getIdPeople());
+        assertEquals(NAME, response.getName());
+        assertEquals(BIRTH_DATE, response.getBirthDate());
+        assertEquals(ADDRESSES, response.getAddresses());
     }
 
     @Test
@@ -70,7 +84,6 @@ class PeopleServiceImplTest {
         assertEquals(NAME, response.get(INDEX).getName());
         assertEquals(BIRTH_DATE, response.get(INDEX).getBirthDate());
         assertEquals(ADDRESSES, response.get(INDEX).getAddresses());
-
     }
 
     @Test
