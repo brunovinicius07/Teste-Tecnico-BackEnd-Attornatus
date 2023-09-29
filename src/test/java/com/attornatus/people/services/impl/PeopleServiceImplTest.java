@@ -240,7 +240,7 @@ class PeopleServiceImplTest {
 
     @Test
     void whenUpdateMainAddressSuccess() {
-        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
+        when(peopleRepository.findById(anyLong())).thenReturn(Optional.of(people));
         Address mainAddress = new Address();
         mainAddress.setMainAddress(true);
         people.getAddresses().add(mainAddress);
