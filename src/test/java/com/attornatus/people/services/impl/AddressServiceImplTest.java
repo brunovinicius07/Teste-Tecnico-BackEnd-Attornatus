@@ -235,6 +235,16 @@ class AddressServiceImplTest {
         verify(addressRepository, times(1)).delete(address);
     }
 
+    @Test
+    void whenDeleteWithAlertException(){
+        when(addressRepository.findById(anyLong())).thenThrow(new RuntimeException("Endereço com id " + ID_ADDRESS +" não cadastrado!"));
+        try {
+            addressServiceImpl.deleteAddres(ID_ADDRESS);
+        } catch (Exception ex){
+            assertEquals("Endereço com id " + ID_ADDRESS +" não cadastrado!", ex.getMessage());
+        }
+    }
+
     private void startPeople(){
         people = new People(ID_PEOPLE, NAME, DATE, ADDRESSES);
         address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people );
