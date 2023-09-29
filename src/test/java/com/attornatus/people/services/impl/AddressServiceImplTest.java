@@ -103,6 +103,17 @@ class AddressServiceImplTest {
         verify(addressRepository, times(1)).findById(ID_ADDRESS);
     }
 
+    @Test
+    void whenFindByIdThenRuntimeException(){
+        when(peopleRepository.findById(Mockito.anyLong())).thenThrow(new RuntimeException("Endereço com id " + ID_ADDRESS + " não cadastrado!"));
+
+        try{
+            peopleServiceImpl.getPeopleById(ID_ADDRESS);
+        } catch (Exception ex){
+            assertEquals(RuntimeException.class, ex.getClass());
+            assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
+        }
+    }
 
     @Test
     void validateAddres() {
