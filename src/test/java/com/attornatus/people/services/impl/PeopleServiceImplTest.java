@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,6 +57,29 @@ class PeopleServiceImplTest {
     void whenCreateThenReturnSucess() {
         when(peopleRepository.save(Mockito.any())).thenReturn(people);
         when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+
+
+        PeopleResponseDto response = peopleServiceImpl.registerPeople(peopleRequestDto);
+
+        assertNotNull(response);
+        assertEquals(PeopleResponseDto.class, response.getClass());
+        assertEquals(ID, response.getIdPeople());
+        assertEquals(NAME, response.getName());
+        assertEquals(BIRTH_DATE, response.getBirthDate());
+        assertEquals(ADDRESSES, response.getAddresses());
+    }
+
+    @Test
+    void whenCreateThenReturnAnDataIntegrityViolationException() {
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(optionalPeople);
+        when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+
+        try {
+            optionalPeople.get().setIdPeople(2L);
+            peopleServiceImpl.registerPeople(peopleRequestDto);
+        } catch (Exception ex){
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+        }
 
 
         PeopleResponseDto response = peopleServiceImpl.registerPeople(peopleRequestDto);
