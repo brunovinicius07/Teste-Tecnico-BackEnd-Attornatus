@@ -214,6 +214,20 @@ class AddressServiceImplTest {
     }
 
     @Test
+    void whenUpdateThenReturnAnDataIntegrityViolationException(){
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
+        when(addressRepository.findById(Mockito.anyLong())).thenReturn(optionalAddress);
+        when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
+
+        try{
+            optionalAddress.get().setIdAddress(2L);
+        } catch (Exception ex){
+            assertEquals(RuntimeException.class, ex.getMessage());
+            assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
+        }
+    }
+
+    @Test
     void deleteAddres() {
     }
 
