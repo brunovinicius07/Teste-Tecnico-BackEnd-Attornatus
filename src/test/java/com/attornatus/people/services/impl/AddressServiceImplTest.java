@@ -1,7 +1,9 @@
 package com.attornatus.people.services.impl;
 
+import com.attornatus.people.models.dto.request.AddressRequestDto;
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.AddressResponseDto;
+import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.Address;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.AddressMapper;
@@ -188,6 +190,27 @@ class AddressServiceImplTest {
         } catch (Exception ex){
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
+    }
+
+    @Test
+    void whenUpdateThenReturnSuccess() {
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
+        when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
+        when(addressRepository.save(Mockito.any())).thenReturn(address);
+        when(addressMapper.toAddressResponseDto(address)).thenReturn(addressResponseDto);
+
+
+        AddressResponseDto response = addressServiceImpl.updateAddress(addressResponseDto.getIdAddress(), new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE));
+
+        assertNotNull(response);
+        assertEquals(AddressResponseDto.class, response.getClass());
+        assertEquals(ID_ADDRESS, response.getIdAddress());
+        assertEquals(PUBLIC_PLACE, response.getPublicPlace());
+        assertEquals(ZIP_CODE, response.getZipCode());
+        assertEquals(NUMBER, response.getNumber());
+        assertEquals(CITY, response.getCity());
+        assertEquals(MAIN_ADDRESS, response.isMainAddress());
+        assertEquals(ID_PEOPLE, response.getIdPeople());
     }
 
     @Test
