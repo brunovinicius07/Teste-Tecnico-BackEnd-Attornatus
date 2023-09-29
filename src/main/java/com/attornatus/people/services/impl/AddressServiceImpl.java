@@ -111,7 +111,7 @@ public class AddressServiceImpl implements AddressService {
 
         addressRepository.delete(address);
 
-        return "Endereço com o ID " + idAddress + " excluido com sucesso!";
+        return "Endereço com o ID " + idAddress + " excluído com sucesso!";
     }
 
 

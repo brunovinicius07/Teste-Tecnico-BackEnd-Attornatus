@@ -228,7 +228,11 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void deleteAddres() {
+    void whenDeleteWithSuccess() {
+        when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
+        String result = addressServiceImpl.deleteAddres(ID_ADDRESS);
+        assertEquals("Endereço com o ID " + ID_ADDRESS + " excluído com sucesso!", result);
+        verify(addressRepository, times(1)).delete(address);
     }
 
     private void startPeople(){
