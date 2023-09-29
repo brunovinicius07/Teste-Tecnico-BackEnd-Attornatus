@@ -49,7 +49,7 @@ public class PeopleServiceImpl implements PeopleService {
         if(peopleList.isEmpty()){
             throw new AlertException(
                     "warn",
-                    "Nenhuma pessoa encontrado!",
+                    "Nenhuma pessoa encontrada!",
                     HttpStatus.NOT_FOUND
             );
         }

@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,8 +102,36 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void validateListPeople() {
+    void whenValidateListPeopleSuccess() {
+        List<People> peopleList = new ArrayList<>();
+        peopleList.add(people);
+        when(peopleRepository.findAll()).thenReturn(peopleList);
+
+        when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+        List<People> response = peopleServiceImpl.validateListPeople();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(ID, response.get(0).getIdPeople());
+        assertEquals(NAME, response.get(0).getName());
+        assertEquals(BIRTH_DATE, response.get(0).getBirthDate());
+        assertEquals(ADDRESSES, response.get(0).getAddresses());
+
+        verify(peopleRepository, times(1)).findAll();
     }
+
+    @Test
+    void whenValidateListPeopleThenReturnAnListOfPeople(){
+        when(peopleRepository.findAll()).thenReturn(Collections.emptyList());
+
+        try{
+            peopleServiceImpl.validateListPeople();
+        } catch (Exception ex){
+            assertEquals("Nenhuma pessoa encontrada!", ex.getMessage());
+        }
+    }
+
+
 
     @Test
     void whenFindByIdThenReturnAnPeopleInstance() {
@@ -133,7 +162,18 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void validatePeople() {
+    void whenValidatePeopleWithSuccess() {
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
+        People response = peopleServiceImpl.validatePeople(ID);
+
+        assertNotNull(response);
+        assertEquals(ID, response.getIdPeople());
+        assertEquals(NAME, response.getName());
+        assertEquals(BIRTH_DATE, response.getBirthDate());
+        assertEquals(ADDRESSES, response.getAddresses());
+
+        verify(peopleRepository, times(1)).findById(ID);
+
 
     }
 
