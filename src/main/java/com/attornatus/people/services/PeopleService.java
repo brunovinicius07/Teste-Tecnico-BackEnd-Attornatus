@@ -12,7 +12,7 @@ public interface PeopleService {
 
     PeopleResponseDto getPeopleById(Long idPeople);
 
-    PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto);
+    PeopleResponseDto updatePeople(Long idPeople, PeopleResponseDto peopleResponseDto);
 
     String deletePeople(Long idPerson);
 }

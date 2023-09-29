@@ -1,6 +1,7 @@
 package com.attornatus.people.controllers;
 
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
+import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.services.PeopleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -34,8 +35,8 @@ public class PeopleController {
 
     @PutMapping("/{idPeople}")
     public ResponseEntity<Object> updatePeople(@PathVariable Long idPeople, @RequestBody
-                                               @Valid PeopleRequestDto peopleRequestDto){
-        return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleRequestDto));
+                                               @Valid PeopleResponseDto peopleResponseDto){
+        return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleResponseDto));
     }
 
     @DeleteMapping("/{idPerson}")

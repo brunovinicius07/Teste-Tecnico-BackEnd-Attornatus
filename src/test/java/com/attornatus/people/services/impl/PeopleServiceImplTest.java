@@ -54,7 +54,7 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenCreateThenReturnSucess() {
+    void whenCreateThenReturnSuccess() {
         when(peopleRepository.save(Mockito.any())).thenReturn(people);
         when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
 
@@ -80,16 +80,6 @@ class PeopleServiceImplTest {
         } catch (Exception ex){
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
         }
-
-
-        PeopleResponseDto response = peopleServiceImpl.registerPeople(peopleRequestDto);
-
-        assertNotNull(response);
-        assertEquals(PeopleResponseDto.class, response.getClass());
-        assertEquals(ID, response.getIdPeople());
-        assertEquals(NAME, response.getName());
-        assertEquals(BIRTH_DATE, response.getBirthDate());
-        assertEquals(ADDRESSES, response.getAddresses());
     }
 
     @Test
@@ -148,7 +138,20 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void updatePeople() {
+    void whenUpdateThenReturnSuccess() {
+        when(peopleRepository.findById(ID)).thenReturn(optionalPeople);
+        when(peopleRepository.save(Mockito.any())).thenReturn(people);
+        when(peopleMapper.toPeopleResponseDto(people)).thenReturn(peopleResponseDto);
+
+
+        PeopleResponseDto response = peopleServiceImpl.updatePeople(peopleResponseDto.getIdPeople(), peopleResponseDto);
+
+        assertNotNull(response);
+        assertEquals(PeopleResponseDto.class, response.getClass());
+        assertEquals(ID, response.getIdPeople());
+        assertEquals(NAME, response.getName());
+        assertEquals(BIRTH_DATE, response.getBirthDate());
+        assertEquals(ADDRESSES, response.getAddresses());
     }
 
     @Test

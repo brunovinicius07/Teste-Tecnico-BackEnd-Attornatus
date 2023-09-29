@@ -80,11 +80,11 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     @Transactional(readOnly = false)
-    public PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto) {
+    public PeopleResponseDto updatePeople(Long idPeople, PeopleResponseDto peopleResponseDto) {
         People people = validatePeople(idPeople);
 
-        people.setName(peopleRequestDto.getName());
-        people.setBirthDate(peopleRequestDto.getBirthDate());
+        people.setName(peopleResponseDto.getName());
+        people.setBirthDate(peopleResponseDto.getBirthDate());
 
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
     }
