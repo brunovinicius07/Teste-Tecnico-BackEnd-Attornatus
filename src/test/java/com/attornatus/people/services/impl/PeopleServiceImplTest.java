@@ -178,6 +178,16 @@ class PeopleServiceImplTest {
     }
 
     @Test
+    void deleteWithAlertException(){
+        when(peopleRepository.findById(anyLong())).thenThrow(new RuntimeException("Pessoa com id " + ID +" não cadastrada!"));
+        try {
+            peopleServiceImpl.deletePeople(ID);
+        } catch (Exception ex){
+            assertEquals("Pessoa com id " + ID +" não cadastrada!", ex.getMessage());
+        }
+    }
+
+    @Test
     void updateMainAddress() {
     }
 
