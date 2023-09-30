@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
 
+    @Mapping(source = "idPeople", target = "people.idPeople")
     Address toAddress(AddressRequestDto addressRequestDto);
 
     @Mapping(source = "people.idPeople", target = "idPeople")

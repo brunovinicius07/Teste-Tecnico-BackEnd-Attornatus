@@ -1,9 +1,7 @@
 package com.attornatus.people.services.impl;
 
 import com.attornatus.people.models.dto.request.AddressRequestDto;
-import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.AddressResponseDto;
-import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.Address;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.AddressMapper;
@@ -34,7 +32,7 @@ class AddressServiceImplTest {
     public static final String NAME             = "João";
     public static final LocalDate DATE          = LocalDate.of(1997, 7, 15);
     public static final List<Address> ADDRESSES = new ArrayList<>();
-    public static final People PEOPLE = (new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
+    public static final People PEOPLE           = (new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
 
     public static final long ID_ADDRESS         = 1L;
     public static final String PUBLIC_PLACE     = "Rua 1";
@@ -61,11 +59,10 @@ class AddressServiceImplTest {
 
     private Address address;
     private AddressResponseDto addressResponseDto;
+    private AddressRequestDto addressRequestDto;
     private Optional<Address> optionalAddress;
 
     private People people;
-    private Optional<People> peopleOptional;
-    private PeopleRequestDto peopleRequestDto;
 
     @BeforeEach
     void setUp(){
@@ -76,6 +73,24 @@ class AddressServiceImplTest {
     @Test
     void whenCreateThenReturnSuccess() {
 
+
+        when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
+        when(addressMapper.toAddress(Mockito.any())).thenReturn(address);
+        when(addressRepository.save(Mockito.any())).thenReturn(address);
+        when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
+
+        AddressResponseDto response = addressServiceImpl.registerAddress(addressRequestDto);
+
+        assertNotNull(response);
+        assertEquals(AddressResponseDto.class, response.getClass());
+        assertEquals(ID_ADDRESS, response.getIdAddress());
+
+        assertEquals(PUBLIC_PLACE, response.getPublicPlace());
+        assertEquals(ZIP_CODE, response.getZipCode());
+        assertEquals(NUMBER, response.getNumber());
+        assertEquals(CITY, response.getCity());
+        assertEquals(MAIN_ADDRESS, response.isMainAddress());
+        assertEquals(ID_PEOPLE, response.getIdPeople());
     }
 
     @Test
@@ -149,6 +164,7 @@ class AddressServiceImplTest {
         assertEquals(ID_PEOPLE, response.getIdPeople());
 
         verify(addressRepository, times(1)).findById(ID_ADDRESS);
+
     }
 
     @Test
@@ -249,6 +265,7 @@ class AddressServiceImplTest {
         people = new People(ID_PEOPLE, NAME, DATE, ADDRESSES);
         address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people );
         addressResponseDto = new AddressResponseDto(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE);
+        addressRequestDto = new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE,NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE);
         optionalAddress = Optional.of(new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people));
     }
 }
