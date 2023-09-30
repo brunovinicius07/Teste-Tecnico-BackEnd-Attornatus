@@ -43,10 +43,10 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Transactional(readOnly = true)
-    public List<People> validateListPeople(){
+    public List<People> validateListPeople() {
         List<People> peopleList = peopleRepository.findAll();
 
-        if(peopleList.isEmpty()){
+        if (peopleList.isEmpty()) {
             throw new AlertException(
                     "warn",
                     "Nenhuma pessoa encontrada!",
@@ -65,13 +65,13 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Transactional(readOnly = true)
-    public People validatePeople(Long idPeople){
+    public People validatePeople(Long idPeople) {
         Optional<People> optionalPeople = peopleRepository.findById(idPeople);
 
-        if(optionalPeople.isEmpty()){
+        if (optionalPeople.isEmpty()) {
             throw new AlertException(
                     "warn",
-                    String.format("Pessoa com id %S não cadastrado!" , idPeople),
+                    String.format("Pessoa com id %S não cadastrado!", idPeople),
                     HttpStatus.NOT_FOUND
             );
         }
@@ -99,9 +99,9 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void updateMainAddress(Long idPeople, boolean mainAdress){
+    public void updateMainAddress(Long idPeople, boolean mainAdress) {
         People people = validatePeople(idPeople);
-        
+
         if (mainAdress) {
             people.getAddresses().forEach(a -> a.setMainAddress(false));
             this.peopleRepository.save(people);

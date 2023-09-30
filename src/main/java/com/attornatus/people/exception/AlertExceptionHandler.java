@@ -17,9 +17,9 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AlertException.class)
-    public ResponseEntity<?> alertExceptionHandler(final AlertException exception, final HttpServletRequest request){
+    public ResponseEntity<?> alertExceptionHandler(final AlertException exception, final HttpServletRequest request) {
         var guid = UUID.randomUUID().toString();
-        log.error( String.format("Error GUID= %s error message: %s", guid, exception.getMessage()), exception);
+        log.error(String.format("Error GUID= %s error message: %s", guid, exception.getMessage()), exception);
         var response = new ApiErrorResponse(
                 guid,
                 exception.getErrorCode(),

@@ -18,17 +18,17 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> registerAddress(@RequestBody @Valid AddressRequestDto addressRequestDto){
+    public ResponseEntity<Object> registerAddress(@RequestBody @Valid AddressRequestDto addressRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.registerAddress(addressRequestDto));
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllAddress(){
+    public ResponseEntity<Object> getAllAddress() {
         return ResponseEntity.ok(addressService.getAllAddress());
     }
 
     @GetMapping("/{idAddress}")
-    public ResponseEntity<Object> getAddressById(@PathVariable Long idAddress){
+    public ResponseEntity<Object> getAddressById(@PathVariable Long idAddress) {
         return ResponseEntity.ok(addressService.getAddresById(idAddress));
     }
 

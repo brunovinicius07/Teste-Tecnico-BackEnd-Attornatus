@@ -28,19 +28,19 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class AddressServiceImplTest {
 
-    public static final long ID_PEOPLE          = 1L;
-    public static final String NAME             = "João";
-    public static final LocalDate DATE          = LocalDate.of(1997, 7, 15);
+    public static final long ID_PEOPLE = 1L;
+    public static final String NAME = "João";
+    public static final LocalDate DATE = LocalDate.of(1997, 7, 15);
     public static final List<Address> ADDRESSES = new ArrayList<>();
-    public static final People PEOPLE           = (new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
+    public static final People PEOPLE = (new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
 
-    public static final long ID_ADDRESS         = 1L;
-    public static final String PUBLIC_PLACE     = "Rua 1";
-    public static final String ZIP_CODE         = "55818-585";
-    public static final String NUMBER           = "22-A";
-    public static final String CITY             = "Carpina";
-    public static final boolean MAIN_ADDRESS    = true;
-    public static final int INDEX               = 0;
+    public static final long ID_ADDRESS = 1L;
+    public static final String PUBLIC_PLACE = "Rua 1";
+    public static final String ZIP_CODE = "55818-585";
+    public static final String NUMBER = "22-A";
+    public static final String CITY = "Carpina";
+    public static final boolean MAIN_ADDRESS = true;
+    public static final int INDEX = 0;
 
     @Autowired
     private AddressServiceImpl addressServiceImpl;
@@ -65,7 +65,7 @@ class AddressServiceImplTest {
     private People people;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         startPeople();
     }
@@ -94,7 +94,7 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void whenFindAllThenReturnAnListOfAddress(){
+    void whenFindAllThenReturnAnListOfAddress() {
         when(addressRepository.findAll()).thenReturn(List.of(address));
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
 
@@ -135,12 +135,12 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void whenValidateListThenReturnAnListOfAddress(){
+    void whenValidateListThenReturnAnListOfAddress() {
         when(addressRepository.findAll()).thenReturn(Collections.emptyList());
 
-        try{
+        try {
             addressServiceImpl.validateListAddress();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals("Nenhum endereço encontrado!", ex.getMessage());
         }
     }
@@ -168,12 +168,14 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenRuntimeException(){
-        when(peopleRepository.findById(Mockito.anyLong())).thenThrow(new RuntimeException("Endereço com id " + ID_ADDRESS + " não cadastrado!"));
+    void whenFindByIdThenRuntimeException() {
+        when(peopleRepository.findById(Mockito.anyLong())).thenThrow(new RuntimeException("Endereço com id "
+                + ID_ADDRESS
+                + " não cadastrado!"));
 
-        try{
+        try {
             peopleServiceImpl.getPeopleById(ID_ADDRESS);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
@@ -198,12 +200,12 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void whenValidateAddressThenRuntimeException(){
+    void whenValidateAddressThenRuntimeException() {
         when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
 
-        try{
+        try {
             addressServiceImpl.validateAddres(ID_ADDRESS);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
     }
@@ -215,8 +217,10 @@ class AddressServiceImplTest {
         when(addressRepository.save(Mockito.any())).thenReturn(address);
         when(addressMapper.toAddressResponseDto(address)).thenReturn(addressResponseDto);
 
-
-        AddressResponseDto response = addressServiceImpl.updateAddress(addressResponseDto.getIdAddress(), new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE));
+        AddressResponseDto response = addressServiceImpl.updateAddress(addressResponseDto.getIdAddress(),
+                new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE,
+                        NUMBER, CITY, MAIN_ADDRESS,
+                        ID_PEOPLE));
 
         assertNotNull(response);
         assertEquals(AddressResponseDto.class, response.getClass());
@@ -230,14 +234,14 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void whenUpdateThenReturnAnDataIntegrityViolationException(){
+    void whenUpdateThenReturnAnDataIntegrityViolationException() {
         when(peopleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(people));
         when(addressRepository.findById(Mockito.anyLong())).thenReturn(optionalAddress);
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
 
-        try{
+        try {
             optionalAddress.get().setIdAddress(2L);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getMessage());
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
@@ -252,20 +256,25 @@ class AddressServiceImplTest {
     }
 
     @Test
-    void whenDeleteWithAlertException(){
-        when(addressRepository.findById(anyLong())).thenThrow(new RuntimeException("Endereço com id " + ID_ADDRESS +" não cadastrado!"));
+    void whenDeleteWithAlertException() {
+        when(addressRepository.findById(anyLong())).thenThrow(new RuntimeException("Endereço com id "
+                + ID_ADDRESS
+                + " não cadastrado!"));
+
         try {
             addressServiceImpl.deleteAddres(ID_ADDRESS);
-        } catch (Exception ex){
-            assertEquals("Endereço com id " + ID_ADDRESS +" não cadastrado!", ex.getMessage());
+        } catch (Exception ex) {
+            assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
     }
 
-    private void startPeople(){
+    private void startPeople() {
         people = new People(ID_PEOPLE, NAME, DATE, ADDRESSES);
-        address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people );
-        addressResponseDto = new AddressResponseDto(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE);
-        addressRequestDto = new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE,NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE);
-        optionalAddress = Optional.of(new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people));
+        address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people);
+        addressResponseDto = new AddressResponseDto(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY,
+                MAIN_ADDRESS, ID_PEOPLE);
+        addressRequestDto = new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, ID_PEOPLE);
+        optionalAddress = Optional.of(new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY,
+                MAIN_ADDRESS, people));
     }
 }

@@ -51,10 +51,10 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Transactional(readOnly = true)
-    public List<Address> validateListAddress(){
-        List<Address>addresList = addressRepository.findAll();
+    public List<Address> validateListAddress() {
+        List<Address> addresList = addressRepository.findAll();
 
-        if (addresList.isEmpty()){
+        if (addresList.isEmpty()) {
             throw new AlertException(
                     "warn",
                     "Nenhum endereço encontrado!",
@@ -73,13 +73,13 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Transactional(readOnly = true)
-    public Address validateAddres(Long cdAddres){
+    public Address validateAddres(Long cdAddres) {
         Optional<Address> optionalAddres = addressRepository.findById(cdAddres);
 
-        if(optionalAddres.isEmpty()){
+        if (optionalAddres.isEmpty()) {
             throw new AlertException(
                     "warn",
-                    String.format("Endereço com id %S não cadastrado!" , cdAddres),
+                    String.format("Endereço com id %S não cadastrado!", cdAddres),
                     HttpStatus.NOT_FOUND
             );
         }
@@ -113,6 +113,4 @@ public class AddressServiceImpl implements AddressService {
 
         return "Endereço com o ID " + idAddress + " excluído com sucesso!";
     }
-
-
 }

@@ -34,7 +34,6 @@ public class People implements Serializable {
     @NotBlank
     private String name;
 
-
     @Past
     @NotNull
     private LocalDate birthDate;

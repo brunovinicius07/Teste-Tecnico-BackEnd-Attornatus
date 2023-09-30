@@ -28,11 +28,11 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class PeopleServiceImplTest {
 
-    public static final long ID                 = 1L;
-    public static final String NAME             = "João";
-    public static final LocalDate BIRTH_DATE    = LocalDate.of(1997, 7, 15);
+    public static final long ID = 1L;
+    public static final String NAME = "João";
+    public static final LocalDate BIRTH_DATE = LocalDate.of(1997, 7, 15);
     public static final List<Address> ADDRESSES = new ArrayList<>();
-    public static final int INDEX               = 0;
+    public static final int INDEX = 0;
 
     @Autowired
     private PeopleServiceImpl peopleServiceImpl;
@@ -49,7 +49,7 @@ class PeopleServiceImplTest {
     private People people;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         startPeople();
     }
@@ -78,13 +78,13 @@ class PeopleServiceImplTest {
         try {
             optionalPeople.get().setIdPeople(2L);
             peopleServiceImpl.registerPeople(peopleRequestDto);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
         }
     }
 
     @Test
-    void whenFindAllThenReturnAnListOfPeople(){
+    void whenFindAllThenReturnAnListOfPeople() {
         when(peopleRepository.findAll()).thenReturn(List.of(people));
         when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
 
@@ -121,17 +121,15 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenValidateListPeopleThenReturnAnListOfPeople(){
+    void whenValidateListPeopleThenReturnAnListOfPeople() {
         when(peopleRepository.findAll()).thenReturn(Collections.emptyList());
 
-        try{
+        try {
             peopleServiceImpl.validateListPeople();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals("Nenhuma pessoa encontrada!", ex.getMessage());
         }
     }
-
-
 
     @Test
     void whenFindByIdThenReturnAnPeopleInstance() {
@@ -149,13 +147,13 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenRuntimeException(){
+    void whenFindByIdThenRuntimeException() {
         String errorMessage = String.format("Pessoa com id %d não cadastrado!", ID);
         when(peopleRepository.findById(Mockito.anyLong())).thenThrow(new RuntimeException(errorMessage));
 
-        try{
+        try {
             peopleServiceImpl.getPeopleById(ID);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals(errorMessage, ex.getMessage());
         }
@@ -176,12 +174,12 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenValidatePeopleThenRuntimeException(){
+    void whenValidatePeopleThenRuntimeException() {
         when(peopleRepository.findById(ID)).thenReturn(optionalPeople);
 
-        try{
+        try {
             peopleServiceImpl.validatePeople(ID);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals("Pessoa com id " + ID + " não cadastrado!", ex.getMessage());
         }
     }
@@ -204,15 +202,15 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenUpdateThenReturnAnDataIntegrityViolationException(){
+    void whenUpdateThenReturnAnDataIntegrityViolationException() {
         String errorMessage = String.format("Pessoa com id %d não cadastrado!", ID);
         when(peopleRepository.findById(Mockito.anyLong())).thenReturn(optionalPeople);
         when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
 
-        try{
+        try {
             optionalPeople.get().setIdPeople(2L);
             peopleServiceImpl.registerPeople(peopleRequestDto);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getMessage());
             assertEquals(errorMessage, ex.getMessage());
         }
@@ -227,12 +225,14 @@ class PeopleServiceImplTest {
     }
 
     @Test
-    void whenDeleteWithAlertException(){
-        when(peopleRepository.findById(anyLong())).thenThrow(new RuntimeException("Pessoa com id " + ID +" não cadastrada!"));
+    void whenDeleteWithAlertException() {
+        when(peopleRepository.findById(anyLong())).thenThrow(new RuntimeException("Pessoa com id "
+                + ID
+                + " não cadastrada!"));
         try {
             peopleServiceImpl.deletePeople(ID);
-        } catch (Exception ex){
-            assertEquals("Pessoa com id " + ID +" não cadastrada!", ex.getMessage());
+        } catch (Exception ex) {
+            assertEquals("Pessoa com id " + ID + " não cadastrada!", ex.getMessage());
         }
     }
 
@@ -255,7 +255,7 @@ class PeopleServiceImplTest {
         verify(peopleRepository, times(1)).findById(ID);
     }
 
-    private void startPeople(){
+    private void startPeople() {
         people = new People(ID, NAME, BIRTH_DATE, ADDRESSES);
         peopleResponseDto = new PeopleResponseDto(ID, NAME, BIRTH_DATE, ADDRESSES);
         optionalPeople = Optional.of(new People(ID, NAME, BIRTH_DATE, ADDRESSES));
