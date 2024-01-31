@@ -7,6 +7,7 @@
 ### ⚙️Features Implemented :
 
 -   Mapper / Request / Response
+-   Test Unitary
 -   Spring Validation
 -   Custom Exception
 -   Service Implement
@@ -23,7 +24,7 @@
 -   JUnit
 -   Mapstruct
 -   Intellij
--  Postman
+-   Postman
 ---
 
 ### ⚙️Functionalities :
@@ -60,6 +61,7 @@
 
 #### PUT:
 - updateAddress
+  
 #### DELETE
 - deleteAddress
 
