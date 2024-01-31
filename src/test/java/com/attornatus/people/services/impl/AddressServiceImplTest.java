@@ -95,10 +95,10 @@ class AddressServiceImplTest {
 
     @Test
     void whenFindAllThenReturnAnListOfAddress() {
-        when(addressRepository.findAll()).thenReturn(List.of(address));
+        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(List.of(address));
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
 
-        List<AddressResponseDto> response = addressServiceImpl.getAllAddress();
+        List<AddressResponseDto> response = addressServiceImpl.getAllAddress(people.getIdPeople());
 
 
         assertNotNull(response);
@@ -118,10 +118,10 @@ class AddressServiceImplTest {
     void whenValidateListAddressSuccess() {
         List<Address> addressList = new ArrayList<>();
         addressList.add(address);
-        when(addressRepository.findAll()).thenReturn(addressList);
+        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(addressList);
 
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
-        List<Address> response = addressServiceImpl.validateListAddress();
+        List<Address> response = addressServiceImpl.validateListAddress(people.getIdPeople());
 
         assertEquals(ID_ADDRESS, response.get(INDEX).getIdAddress());
         assertEquals(PUBLIC_PLACE, response.get(INDEX).getPublicPlace());
@@ -136,10 +136,10 @@ class AddressServiceImplTest {
 
     @Test
     void whenValidateListThenReturnAnListOfAddress() {
-        when(addressRepository.findAll()).thenReturn(Collections.emptyList());
+        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(Collections.emptyList());
 
         try {
-            addressServiceImpl.validateListAddress();
+            addressServiceImpl.validateListAddress(people.getIdPeople());
         } catch (Exception ex) {
             assertEquals("Nenhum endereço encontrado!", ex.getMessage());
         }

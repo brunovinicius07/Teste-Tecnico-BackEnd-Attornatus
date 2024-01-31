@@ -8,7 +8,7 @@ import java.util.List;
 public interface AddressService {
     AddressResponseDto registerAddress(AddressRequestDto addressRequestDto);
 
-    List<AddressResponseDto> getAllAddress();
+    List<AddressResponseDto> getAllAddress(Long idPeople);
 
     AddressResponseDto getAddresById(Long idAddress);
 

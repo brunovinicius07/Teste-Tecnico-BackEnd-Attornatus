@@ -44,15 +44,15 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AddressResponseDto> getAllAddress() {
-        List<Address> addressList = validateListAddress();
+    public List<AddressResponseDto> getAllAddress(Long idPeople) {
+        List<Address> addressList = validateListAddress(idPeople);
 
         return addressList.stream().map(addressMapper::toAddressResponseDto).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<Address> validateListAddress() {
-        List<Address> addresList = addressRepository.findAll();
+    public List<Address> validateListAddress(Long idPeople) {
+        List<Address> addresList = addressRepository.findAllAddressByPeopleIdPeople(idPeople);
 
         if (addresList.isEmpty()) {
             throw new AlertException(

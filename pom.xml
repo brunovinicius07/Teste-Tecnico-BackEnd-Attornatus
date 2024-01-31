@@ -12,7 +12,7 @@
 	<artifactId>people</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>people</name>
-	<description> Technical Test - Back End - Attornatus</description>
+	<description> Technical Test - Back End </description>
 	<properties>
 		<java.version>17</java.version>
 		<mapstruct.version>1.4.2.Final</mapstruct.version>
