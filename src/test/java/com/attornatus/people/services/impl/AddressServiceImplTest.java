@@ -31,8 +31,9 @@ class AddressServiceImplTest {
     public static final long ID_PEOPLE = 1L;
     public static final String NAME = "João";
     public static final LocalDate DATE = LocalDate.of(1997, 7, 15);
+    public static final String CPF = "111.222.333-44";
     public static final List<Address> ADDRESSES = new ArrayList<>();
-    public static final People PEOPLE = (new People(ID_PEOPLE, NAME, DATE, ADDRESSES));
+    public static final People PEOPLE = (new People(ID_PEOPLE, NAME, DATE, CPF , ADDRESSES));
 
     public static final long ID_ADDRESS = 1L;
     public static final String PUBLIC_PLACE = "Rua 1";
@@ -269,7 +270,7 @@ class AddressServiceImplTest {
     }
 
     private void startPeople() {
-        people = new People(ID_PEOPLE, NAME, DATE, ADDRESSES);
+        people = new People(ID_PEOPLE, NAME, DATE, CPF, ADDRESSES);
         address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, people);
         addressResponseDto = new AddressResponseDto(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY,
                 MAIN_ADDRESS, ID_PEOPLE);

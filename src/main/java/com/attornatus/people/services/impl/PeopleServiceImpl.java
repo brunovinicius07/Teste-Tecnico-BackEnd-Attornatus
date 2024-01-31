@@ -50,9 +50,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = true)
     public List<PeopleResponseDto> getAllPeople() {
-        List<People> peopleList = validateListPeople();
-
-        return peopleList.stream().map(peopleMapper::toPeopleResponseDto).collect(Collectors.toList());
+        return peopleMapper.toListPeopleResponse(validateListPeople());
     }
 
     @Override
@@ -67,9 +65,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = true)
     public PeopleResponseDto getPeopleById(Long idPeople) {
-        People people = validatePeople(idPeople);
-
-        return peopleMapper.toPeopleResponseDto(people);
+        return peopleMapper.toPeopleResponseDto(validatePeople(idPeople));
     }
 
     @Override
