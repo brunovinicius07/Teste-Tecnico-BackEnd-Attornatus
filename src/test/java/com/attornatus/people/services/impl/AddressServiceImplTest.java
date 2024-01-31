@@ -150,7 +150,7 @@ class AddressServiceImplTest {
         when(addressRepository.findById(Mockito.anyLong())).thenReturn(optionalAddress);
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
 
-        AddressResponseDto response = addressServiceImpl.getAddresById(ID_ADDRESS);
+        AddressResponseDto response = addressServiceImpl.getAddressById(ID_ADDRESS);
 
         assertNotNull(response);
 
@@ -250,7 +250,7 @@ class AddressServiceImplTest {
     @Test
     void whenDeleteWithSuccess() {
         when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
-        String result = addressServiceImpl.deleteAddres(ID_ADDRESS);
+        String result = addressServiceImpl.deleteAddress(ID_ADDRESS);
         assertEquals("Endereço com o ID " + ID_ADDRESS + " excluído com sucesso!", result);
         verify(addressRepository, times(1)).delete(address);
     }
@@ -262,7 +262,7 @@ class AddressServiceImplTest {
                 + " não cadastrado!"));
 
         try {
-            addressServiceImpl.deleteAddres(ID_ADDRESS);
+            addressServiceImpl.deleteAddress(ID_ADDRESS);
         } catch (Exception ex) {
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }

@@ -5,6 +5,7 @@ import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.PeopleMapper;
+import com.attornatus.people.repositories.AddressRepository;
 import com.attornatus.people.repositories.PeopleRepository;
 import com.attornatus.people.services.PeopleService;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,14 @@ public class PeopleServiceImpl implements PeopleService {
     public final PeopleRepository peopleRepository;
     public final PeopleMapper peopleMapper;
 
-    public PeopleServiceImpl(PeopleRepository peopleRepository, PeopleMapper peopleMapper) {
+    public final AddressRepository addressRepository;
+
+    public PeopleServiceImpl(PeopleRepository peopleRepository,
+                             PeopleMapper peopleMapper,
+                             AddressRepository addressRepository) {
         this.peopleRepository = peopleRepository;
         this.peopleMapper = peopleMapper;
+        this.addressRepository = addressRepository;
     }
 
     @Override
@@ -89,15 +95,6 @@ public class PeopleServiceImpl implements PeopleService {
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public String deletePeople(Long idPerson) {
-        People people = validatePeople(idPerson);
-        peopleRepository.delete(people);
-
-        return "Pessoa com ID " + idPerson + " excluído com sucesso!";
-    }
-
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void updateMainAddress(Long idPeople, boolean mainAdress) {
         People people = validatePeople(idPeople);
@@ -106,5 +103,18 @@ public class PeopleServiceImpl implements PeopleService {
             people.getAddresses().forEach(a -> a.setMainAddress(false));
             this.peopleRepository.save(people);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public String deletePeople(Long idPerson) {
+        People people = validatePeople(idPerson);
+        people.getAddresses().forEach(a -> {
+            a.setPeople(null);
+            addressRepository.delete(a);
+        });
+        peopleRepository.delete(people);
+
+        return "Pessoa com ID " + idPerson + " excluído com sucesso!";
     }
 }

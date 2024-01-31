@@ -10,9 +10,9 @@ public interface AddressService {
 
     List<AddressResponseDto> getAllAddress(Long idPeople);
 
-    AddressResponseDto getAddresById(Long idAddress);
+    AddressResponseDto getAddressById(Long idAddress);
 
     AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto);
 
-    Object deleteAddres(Long idAddress);
+    Object deleteAddress(Long idAddress);
 }

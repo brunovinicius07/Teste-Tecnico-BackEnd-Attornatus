@@ -38,6 +38,6 @@ public class People implements Serializable {
     @NotNull
     private LocalDate birthDate;
 
-    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "people")
     private List<Address> addresses = new ArrayList<>();
 }

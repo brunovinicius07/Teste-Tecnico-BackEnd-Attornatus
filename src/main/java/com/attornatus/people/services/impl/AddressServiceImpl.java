@@ -66,7 +66,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public AddressResponseDto getAddresById(Long idAddress) {
+    public AddressResponseDto getAddressById(Long idAddress) {
         Address address = validateAddres(idAddress);
 
         return addressMapper.toAddressResponseDto(address);
@@ -106,7 +106,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = false)
-    public String deleteAddres(Long idAddress) {
+    public String deleteAddress(Long idAddress) {
         Address address = validateAddres(idAddress);
 
         addressRepository.delete(address);

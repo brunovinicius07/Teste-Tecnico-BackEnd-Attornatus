@@ -34,7 +34,7 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.registerAddress(addressRequestDto));
     }
 
-    @Operation(summary = "Buscar todos os endereços da pessoa", method = "GET")
+    @Operation(summary = "Buscar todos os endereços da pessoa por id", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK:Busca realizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Bad Request: Parametros inválidos"),
@@ -48,7 +48,7 @@ public class AddressController {
         return ResponseEntity.ok(addressService.getAllAddress(idPeople));
     }
 
-    @Operation(summary = "Buscar um endereço pelo id", method = "GET")
+    @Operation(summary = "Buscar um endereço por id", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK: Busca realizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Bad Request: Parametros inválidos"),
@@ -59,10 +59,10 @@ public class AddressController {
     })
     @GetMapping("/{idAddress}")
     public ResponseEntity<Object> getAddressById(@PathVariable Long idAddress) {
-        return ResponseEntity.ok(addressService.getAddresById(idAddress));
+        return ResponseEntity.ok(addressService.getAddressById(idAddress));
     }
 
-    @Operation(summary = "Editar um endereço pelo id", method = "PUT")
+    @Operation(summary = "Editar um endereço por id", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK: Atualização realizado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Bad Request: Parametros inválidos"),
@@ -77,7 +77,7 @@ public class AddressController {
         return ResponseEntity.ok(addressService.updateAddress(idAddress, addressRequestDto));
     }
 
-    @Operation(summary = "Deletar um endereço pelo id", method = "PUT")
+    @Operation(summary = "Deletar um endereço por id", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK: Deletado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Bad Request: Parametros inválidos"),
@@ -88,6 +88,6 @@ public class AddressController {
     })
     @DeleteMapping("/{idAddress}")
     public ResponseEntity<Object> deleteAddress(@PathVariable Long idAddress) {
-        return ResponseEntity.ok(addressService.deleteAddres(idAddress));
+        return ResponseEntity.ok(addressService.deleteAddress(idAddress));
     }
 }
