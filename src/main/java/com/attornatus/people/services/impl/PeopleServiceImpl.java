@@ -1,6 +1,5 @@
 package com.attornatus.people.services.impl;
 
-import com.attornatus.people.exception.AlertException;
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.People;
