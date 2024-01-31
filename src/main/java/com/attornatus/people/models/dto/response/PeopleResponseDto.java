@@ -20,5 +20,7 @@ public class PeopleResponseDto {
 
     private LocalDate birthDate;
 
+    private String cpf;
+
     private List<Address> addresses = new ArrayList<>();
 }

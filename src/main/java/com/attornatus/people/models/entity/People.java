@@ -38,6 +38,10 @@ public class People implements Serializable {
     @NotNull
     private LocalDate birthDate;
 
+    @Size(max = 13)
+    @NotNull
+    private String cpf;
+
     @OneToMany(mappedBy = "people")
     private List<Address> addresses = new ArrayList<>();
 }

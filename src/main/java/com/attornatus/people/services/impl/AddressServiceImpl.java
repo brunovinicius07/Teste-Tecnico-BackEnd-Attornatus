@@ -1,5 +1,7 @@
 package com.attornatus.people.services.impl;
 
+import com.attornatus.people.exception.Address.AddressIsPresentException;
+import com.attornatus.people.exception.Address.AddressNotFoundException;
 import com.attornatus.people.models.dto.request.AddressRequestDto;
 import com.attornatus.people.models.dto.response.AddressResponseDto;
 import com.attornatus.people.models.entity.Address;
@@ -8,13 +10,11 @@ import com.attornatus.people.models.mapper.AddressMapper;
 import com.attornatus.people.repositories.AddressRepository;
 import com.attornatus.people.repositories.PeopleRepository;
 import com.attornatus.people.services.AddressService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -38,6 +38,10 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto registerAddress(AddressRequestDto addressRequestDto) {
+        existingAddress(addressRequestDto.getPublicPlace(),
+                addressRequestDto.getNumber(),
+                addressRequestDto.getZipCode());
+
         People people = peopleServiceimpl.validatePeople(addressRequestDto.getIdPeople());
         peopleServiceimpl.updateMainAddress(addressRequestDto.getIdPeople(), addressRequestDto.isMainAddress());
 
@@ -50,52 +54,47 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = true)
     public List<AddressResponseDto> getAllAddress(Long idPeople) {
-        List<Address> addressList = validateListAddress(idPeople);
 
-        return addressList.stream().map(addressMapper::toAddressResponseDto).collect(Collectors.toList());
+        return addressMapper.toListAddressResponse(validateListAddress(idPeople));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Address> validateListAddress(Long idPeople) {
         List<Address> addresList = addressRepository.findAllAddressByPeopleIdPeople(idPeople);
+        if (addresList.isEmpty())throw new AddressNotFoundException();
 
-        if (addresList.isEmpty()) {
-            throw new AlertException(
-                    "warn",
-                    "Nenhum endereço encontrado!",
-                    HttpStatus.NOT_FOUND
-            );
-        }
         return addresList;
     }
 
     @Override
     @Transactional(readOnly = true)
     public AddressResponseDto getAddressById(Long idAddress) {
-        Address address = validateAddress(idAddress);
-
-        return addressMapper.toAddressResponseDto(address);
+        return addressMapper.toAddressResponseDto(validateAddress(idAddress));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Address validateAddress(Long cdAddress) {
-        Optional<Address> optionalAddress = addressRepository.findById(cdAddress);
+        return addressRepository.findById(cdAddress).orElseThrow(AddressNotFoundException::new);
+    }
 
-        if (optionalAddress.isEmpty()) {
-            throw new AlertException(
-                    "warn",
-                    String.format("Endereço com id %S não cadastrado!", cdAddress),
-                    HttpStatus.NOT_FOUND
-            );
-        }
-        return optionalAddress.get();
+    @Override
+    @Transactional(readOnly = true)
+    public void existingAddress(String publicPlace, String number, String zipCode) {
+        addressRepository.findAddressByPublicPlaceAndNumberAndZipCode(publicPlace, number, zipCode)
+                .ifPresent(a -> {
+                    throw  new AddressIsPresentException();
+                });
     }
 
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto) {
+        existingAddress(addressRequestDto.getPublicPlace(),
+                        addressRequestDto.getNumber(),
+                        addressRequestDto.getZipCode());
+
         Address address = validateAddress(idAddress);
         People people = peopleRepository.findPeopleByIdPeople(addressRequestDto.getIdPeople());
 
@@ -115,9 +114,8 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public String deleteAddress(Long idAddress) {
-        Address address = validateAddress(idAddress);
 
-        addressRepository.delete(address);
+        addressRepository.delete(validateAddress(idAddress));
 
         return "Endereço com o ID " + idAddress + " excluído com sucesso!";
     }

@@ -6,6 +6,8 @@ import com.attornatus.people.models.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
 
@@ -14,4 +16,6 @@ public interface AddressMapper {
 
     @Mapping(source = "people.idPeople", target = "idPeople")
     AddressResponseDto toAddressResponseDto(Address address);
+
+    List<AddressResponseDto> toListAddressResponse(List<Address> addressList);
 }

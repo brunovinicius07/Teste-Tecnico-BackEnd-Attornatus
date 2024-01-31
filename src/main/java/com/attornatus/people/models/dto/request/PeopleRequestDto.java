@@ -14,4 +14,6 @@ public class PeopleRequestDto {
     private String name;
 
     private LocalDate birthDate;
+
+    private String cpf;
 }

@@ -1,5 +1,6 @@
 package com.attornatus.people.services.impl;
 
+import com.attornatus.people.exception.People.PeopleNotFoundException;
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.People;
@@ -51,14 +52,8 @@ public class PeopleServiceImpl implements PeopleService {
     @Transactional(readOnly = true)
     public List<People> validateListPeople() {
         List<People> peopleList = peopleRepository.findAll();
+        if (peopleList.isEmpty()) throw new PeopleNotFoundException();
 
-        if (peopleList.isEmpty()) {
-            throw new AlertException(
-                    "warn",
-                    "Nenhuma pessoa encontrada!",
-                    HttpStatus.NOT_FOUND
-            );
-        }
         return peopleList;
     }
 
@@ -73,16 +68,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = true)
     public People validatePeople(Long idPeople) {
-        Optional<People> optionalPeople = peopleRepository.findById(idPeople);
-
-        if (optionalPeople.isEmpty()) {
-            throw new AlertException(
-                    "warn",
-                    String.format("Pessoa com id %S não cadastrado!", idPeople),
-                    HttpStatus.NOT_FOUND
-            );
-        }
-        return optionalPeople.get();
+        return peopleRepository.findById(idPeople).orElseThrow(PeopleNotFoundException::new);
     }
 
     @Override

@@ -17,6 +17,8 @@ public interface AddressService {
 
     Address validateAddress(Long cdAddress);
 
+    void existingAddress(String publicPlace, String number, String zipCode);
+
     AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto);
 
     Object deleteAddress(Long idAddress);
