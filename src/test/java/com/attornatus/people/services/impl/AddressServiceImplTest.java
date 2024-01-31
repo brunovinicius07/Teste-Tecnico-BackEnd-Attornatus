@@ -184,7 +184,7 @@ class AddressServiceImplTest {
     @Test
     void whenValidatePeopleWithSuccess() {
         when(addressRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(address));
-        Address response = addressServiceImpl.validateAddres(ID_ADDRESS);
+        Address response = addressServiceImpl.validateAddress(ID_ADDRESS);
 
         assertNotNull(response);
         assertEquals(ID_ADDRESS, response.getIdAddress());
@@ -204,7 +204,7 @@ class AddressServiceImplTest {
         when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
 
         try {
-            addressServiceImpl.validateAddres(ID_ADDRESS);
+            addressServiceImpl.validateAddress(ID_ADDRESS);
         } catch (Exception ex) {
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }

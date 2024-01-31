@@ -7,6 +7,7 @@ import com.attornatus.people.models.entity.Address;
 import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.AddressMapper;
 import com.attornatus.people.repositories.AddressRepository;
+import com.attornatus.people.repositories.PeopleRepository;
 import com.attornatus.people.services.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,16 @@ public class AddressServiceImpl implements AddressService {
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
 
-    public AddressServiceImpl(PeopleServiceImpl peopleServiceimpl, AddressMapper addressMapper,
-                              AddressRepository addressRepository) {
+    private final PeopleRepository peopleRepository;
+
+    public AddressServiceImpl(PeopleServiceImpl peopleServiceimpl,
+                              AddressMapper addressMapper,
+                              AddressRepository addressRepository,
+                              PeopleRepository peopleRepository) {
         this.peopleServiceimpl = peopleServiceimpl;
         this.addressMapper = addressMapper;
         this.addressRepository = addressRepository;
+        this.peopleRepository = peopleRepository;
     }
 
     @Override
@@ -50,6 +56,7 @@ public class AddressServiceImpl implements AddressService {
         return addressList.stream().map(addressMapper::toAddressResponseDto).collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<Address> validateListAddress(Long idPeople) {
         List<Address> addresList = addressRepository.findAllAddressByPeopleIdPeople(idPeople);
@@ -67,35 +74,37 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = true)
     public AddressResponseDto getAddressById(Long idAddress) {
-        Address address = validateAddres(idAddress);
+        Address address = validateAddress(idAddress);
 
         return addressMapper.toAddressResponseDto(address);
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public Address validateAddres(Long cdAddres) {
-        Optional<Address> optionalAddres = addressRepository.findById(cdAddres);
+    public Address validateAddress(Long cdAddress) {
+        Optional<Address> optionalAddress = addressRepository.findById(cdAddress);
 
-        if (optionalAddres.isEmpty()) {
+        if (optionalAddress.isEmpty()) {
             throw new AlertException(
                     "warn",
-                    String.format("Endereço com id %S não cadastrado!", cdAddres),
+                    String.format("Endereço com id %S não cadastrado!", cdAddress),
                     HttpStatus.NOT_FOUND
             );
         }
-        return optionalAddres.get();
+        return optionalAddress.get();
     }
 
     @Override
     @Transactional(readOnly = false)
     public AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto) {
-        Address address = validateAddres(idAddress);
+        Address address = validateAddress(idAddress);
+        People people = peopleRepository.findPeopleByIdPeople(addressRequestDto.getIdPeople());
 
         address.setPublicPlace(addressRequestDto.getPublicPlace());
         address.setZipCode(addressRequestDto.getZipCode());
         address.setNumber(addressRequestDto.getNumber());
         address.setCity(addressRequestDto.getCity());
-        address.getPeople().setIdPeople(addressRequestDto.getIdPeople());
+        address.setPeople(people);
 
         peopleServiceimpl.updateMainAddress(addressRequestDto.getIdPeople(), addressRequestDto.isMainAddress());
 
@@ -107,7 +116,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(readOnly = false)
     public String deleteAddress(Long idAddress) {
-        Address address = validateAddres(idAddress);
+        Address address = validateAddress(idAddress);
 
         addressRepository.delete(address);
 

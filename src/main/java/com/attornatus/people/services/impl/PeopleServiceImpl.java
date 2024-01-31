@@ -48,6 +48,7 @@ public class PeopleServiceImpl implements PeopleService {
         return peopleList.stream().map(peopleMapper::toPeopleResponseDto).collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<People> validateListPeople() {
         List<People> peopleList = peopleRepository.findAll();
@@ -70,6 +71,7 @@ public class PeopleServiceImpl implements PeopleService {
         return peopleMapper.toPeopleResponseDto(people);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public People validatePeople(Long idPeople) {
         Optional<People> optionalPeople = peopleRepository.findById(idPeople);
@@ -86,11 +88,11 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     @Transactional(readOnly = false)
-    public PeopleResponseDto updatePeople(Long idPeople, PeopleResponseDto peopleResponseDto) {
+    public PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto) {
         People people = validatePeople(idPeople);
 
-        people.setName(peopleResponseDto.getName());
-        people.setBirthDate(peopleResponseDto.getBirthDate());
+        people.setName(peopleRequestDto.getName());
+        people.setBirthDate(peopleRequestDto.getBirthDate());
 
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
     }

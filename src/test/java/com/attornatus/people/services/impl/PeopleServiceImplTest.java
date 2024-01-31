@@ -191,7 +191,7 @@ class PeopleServiceImplTest {
         when(peopleMapper.toPeopleResponseDto(people)).thenReturn(peopleResponseDto);
 
 
-        PeopleResponseDto response = peopleServiceImpl.updatePeople(peopleResponseDto.getIdPeople(), peopleResponseDto);
+        PeopleResponseDto response = peopleServiceImpl.updatePeople(peopleResponseDto.getIdPeople(), peopleRequestDto);
 
         assertNotNull(response);
         assertEquals(PeopleResponseDto.class, response.getClass());

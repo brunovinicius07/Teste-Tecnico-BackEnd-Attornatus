@@ -74,8 +74,8 @@ public class PeopleController {
     })
     @PutMapping("/{idPeople}")
     public ResponseEntity<Object> updatePeople(@PathVariable Long idPeople, @RequestBody
-    @Valid PeopleResponseDto peopleResponseDto) {
-        return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleResponseDto));
+    @Valid PeopleRequestDto peopleRequestDto) {
+        return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleRequestDto));
     }
 
     @Operation(summary = "Deletar o registro da pessoa por id", method = "PUT")
