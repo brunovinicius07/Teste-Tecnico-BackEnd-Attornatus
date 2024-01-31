@@ -1,6 +1,7 @@
 package com.attornatus.people.services.impl;
 
 import com.attornatus.people.exception.People.PeopleNotFoundException;
+import com.attornatus.people.exception.People.PeoplePresentException;
 import com.attornatus.people.models.dto.request.PeopleRequestDto;
 import com.attornatus.people.models.dto.response.PeopleResponseDto;
 import com.attornatus.people.models.entity.People;
@@ -36,8 +37,14 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = false)
     public PeopleResponseDto registerPeople(PeopleRequestDto peopleRequestDto) {
-
+        existingPeople(peopleRequestDto.getCpf());
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(peopleMapper.toPeople(peopleRequestDto)));
+    }
+
+    public void existingPeople(String cpf){
+        peopleRepository.findPeopleByCpf(cpf).ifPresent(people -> {
+            throw new PeoplePresentException();
+        });
     }
 
     @Override
@@ -74,19 +81,21 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     @Transactional(readOnly = false)
     public PeopleResponseDto updatePeople(Long idPeople, PeopleRequestDto peopleRequestDto) {
+        existingPeople(peopleRequestDto.getCpf());
         People people = validatePeople(idPeople);
 
         people.setName(peopleRequestDto.getName());
         people.setBirthDate(peopleRequestDto.getBirthDate());
+        people.setCpf(peopleRequestDto.getCpf());
 
         return peopleMapper.toPeopleResponseDto(peopleRepository.save(people));
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void updateMainAddress(Long idPeople, boolean mainAdress) {
+    public void updateMainAddress(Long idPeople, boolean mainAddress) {
         People people = validatePeople(idPeople);
 
-        if (mainAdress) {
+        if (mainAddress) {
             people.getAddresses().forEach(a -> a.setMainAddress(false));
             this.peopleRepository.save(people);
         }

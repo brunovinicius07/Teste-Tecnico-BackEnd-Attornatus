@@ -38,7 +38,7 @@ public class People implements Serializable {
     @NotNull
     private LocalDate birthDate;
 
-    @Size(max = 13)
+    @Size(max = 14)
     @NotNull
     private String cpf;
 
