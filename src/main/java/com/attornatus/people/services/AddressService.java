@@ -21,5 +21,5 @@ public interface AddressService {
 
     AddressResponseDto updateAddress(Long idAddress, AddressRequestDto addressRequestDto);
 
-    Object deleteAddress(Long idAddress);
+    String deleteAddress(Long idAddress);
 }

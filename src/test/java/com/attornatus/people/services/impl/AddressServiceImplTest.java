@@ -7,6 +7,7 @@ import com.attornatus.people.models.entity.People;
 import com.attornatus.people.models.mapper.AddressMapper;
 import com.attornatus.people.repositories.AddressRepository;
 import com.attornatus.people.repositories.PeopleRepository;
+import com.attornatus.people.services.AddressService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,10 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,21 +28,26 @@ class AddressServiceImplTest {
 
     public static final long ID_PEOPLE = 1L;
     public static final String NAME = "João";
-    public static final LocalDate DATE = LocalDate.of(1997, 7, 15);
+    public static final LocalDate DATE = LocalDate.of(1998, 7, 15);
     public static final String CPF = "111.222.333-44";
     public static final List<Address> ADDRESSES = new ArrayList<>();
     public static final People PEOPLE = (new People(ID_PEOPLE, NAME, DATE, CPF , ADDRESSES));
 
     public static final long ID_ADDRESS = 1L;
     public static final String PUBLIC_PLACE = "Rua 1";
-    public static final String ZIP_CODE = "55818-585";
+    public static final String ZIP_CODE = "55818-000";
     public static final String NUMBER = "22-A";
-    public static final String CITY = "Carpina";
+    public static final String CITY = "Recife";
     public static final boolean MAIN_ADDRESS = true;
     public static final int INDEX = 0;
 
+    static {
+        Address address = new Address(ID_ADDRESS, PUBLIC_PLACE, ZIP_CODE, NUMBER, CITY, MAIN_ADDRESS, PEOPLE);
+        ADDRESSES.add(address);
+    }
+
     @Autowired
-    private AddressServiceImpl addressServiceImpl;
+    private AddressService addressService;
 
     @Autowired
     private PeopleServiceImpl peopleServiceImpl;
@@ -80,7 +83,7 @@ class AddressServiceImplTest {
         when(addressRepository.save(Mockito.any())).thenReturn(address);
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
 
-        AddressResponseDto response = addressServiceImpl.registerAddress(addressRequestDto);
+        AddressResponseDto response = addressService.registerAddress(addressRequestDto);
 
         assertNotNull(response);
         assertEquals(AddressResponseDto.class, response.getClass());
@@ -96,11 +99,11 @@ class AddressServiceImplTest {
 
     @Test
     void whenFindAllThenReturnAnListOfAddress() {
-        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(List.of(address));
-        when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
+        when(addressRepository.findAllAddressByPeopleIdPeople(ID_PEOPLE)).thenReturn(List.of(address));
 
-        List<AddressResponseDto> response = addressServiceImpl.getAllAddress(people.getIdPeople());
+        when(addressMapper.toListAddressResponse(List.of(address))).thenReturn(List.of(addressResponseDto));
 
+        List<AddressResponseDto> response = addressService.getAllAddress(people.getIdPeople());
 
         assertNotNull(response);
         assertEquals(1, response.size());
@@ -115,14 +118,13 @@ class AddressServiceImplTest {
         assertEquals(ID_PEOPLE, response.get(INDEX).getIdPeople());
     }
 
+
     @Test
     void whenValidateListAddressSuccess() {
-        List<Address> addressList = new ArrayList<>();
-        addressList.add(address);
-        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(addressList);
+        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(List.of(address));
+        when(addressMapper.toListAddressResponse(ADDRESSES)).thenReturn(List.of(addressResponseDto));
 
-        when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
-        List<Address> response = addressServiceImpl.validateListAddress(people.getIdPeople());
+        List<Address> response = addressService.validateListAddress(ID_PEOPLE);
 
         assertEquals(ID_ADDRESS, response.get(INDEX).getIdAddress());
         assertEquals(PUBLIC_PLACE, response.get(INDEX).getPublicPlace());
@@ -132,15 +134,15 @@ class AddressServiceImplTest {
         assertEquals(MAIN_ADDRESS, response.get(INDEX).isMainAddress());
         assertEquals(PEOPLE, response.get(INDEX).getPeople());
 
-        verify(addressRepository, times(1)).findAll();
+        verify(addressRepository, times(1)).findAllAddressByPeopleIdPeople(ID_PEOPLE);
     }
 
     @Test
     void whenValidateListThenReturnAnListOfAddress() {
-        when(addressRepository.findAllAddressByPeopleIdPeople(people.getIdPeople())).thenReturn(Collections.emptyList());
+        when(addressRepository.findAllAddressByPeopleIdPeople(ID_PEOPLE)).thenReturn(List.of(address));
 
         try {
-            addressServiceImpl.validateListAddress(people.getIdPeople());
+            addressService.validateListAddress(ID_PEOPLE);
         } catch (Exception ex) {
             assertEquals("Nenhum endereço encontrado!", ex.getMessage());
         }
@@ -151,7 +153,7 @@ class AddressServiceImplTest {
         when(addressRepository.findById(Mockito.anyLong())).thenReturn(optionalAddress);
         when(addressMapper.toAddressResponseDto(Mockito.any())).thenReturn(addressResponseDto);
 
-        AddressResponseDto response = addressServiceImpl.getAddressById(ID_ADDRESS);
+        AddressResponseDto response = addressService.getAddressById(ID_ADDRESS);
 
         assertNotNull(response);
 
@@ -185,7 +187,7 @@ class AddressServiceImplTest {
     @Test
     void whenValidatePeopleWithSuccess() {
         when(addressRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(address));
-        Address response = addressServiceImpl.validateAddress(ID_ADDRESS);
+        Address response = addressService.validateAddress(ID_ADDRESS);
 
         assertNotNull(response);
         assertEquals(ID_ADDRESS, response.getIdAddress());
@@ -205,7 +207,7 @@ class AddressServiceImplTest {
         when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
 
         try {
-            addressServiceImpl.validateAddress(ID_ADDRESS);
+            addressService.validateAddress(ID_ADDRESS);
         } catch (Exception ex) {
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
@@ -218,7 +220,7 @@ class AddressServiceImplTest {
         when(addressRepository.save(Mockito.any())).thenReturn(address);
         when(addressMapper.toAddressResponseDto(address)).thenReturn(addressResponseDto);
 
-        AddressResponseDto response = addressServiceImpl.updateAddress(addressResponseDto.getIdAddress(),
+        AddressResponseDto response = addressService.updateAddress(addressResponseDto.getIdAddress(),
                 new AddressRequestDto(PUBLIC_PLACE, ZIP_CODE,
                         NUMBER, CITY, MAIN_ADDRESS,
                         ID_PEOPLE));
@@ -251,7 +253,7 @@ class AddressServiceImplTest {
     @Test
     void whenDeleteWithSuccess() {
         when(addressRepository.findById(ID_ADDRESS)).thenReturn(optionalAddress);
-        String result = addressServiceImpl.deleteAddress(ID_ADDRESS);
+        String result = addressService.deleteAddress(ID_ADDRESS);
         assertEquals("Endereço com o ID " + ID_ADDRESS + " excluído com sucesso!", result);
         verify(addressRepository, times(1)).delete(address);
     }
@@ -263,7 +265,7 @@ class AddressServiceImplTest {
                 + " não cadastrado!"));
 
         try {
-            addressServiceImpl.deleteAddress(ID_ADDRESS);
+            addressService.deleteAddress(ID_ADDRESS);
         } catch (Exception ex) {
             assertEquals("Endereço com id " + ID_ADDRESS + " não cadastrado!", ex.getMessage());
         }
