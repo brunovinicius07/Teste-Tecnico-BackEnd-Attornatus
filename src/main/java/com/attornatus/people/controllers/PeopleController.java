@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "people")
 public class PeopleController {
@@ -31,7 +33,7 @@ public class PeopleController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @PostMapping
-    public ResponseEntity<Object> registerPeople(@RequestBody @Valid PeopleRequestDto peopleRequestDto) {
+    public ResponseEntity<PeopleResponseDto> registerPeople(@RequestBody @Valid PeopleRequestDto peopleRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(peopleService.registerPeople(peopleRequestDto));
     }
 
@@ -45,7 +47,7 @@ public class PeopleController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @GetMapping
-    public ResponseEntity<Object> getAllPeople() {
+    public ResponseEntity<List<PeopleResponseDto>> getAllPeople() {
         return ResponseEntity.ok(peopleService.getAllPeople());
     }
 
@@ -59,7 +61,7 @@ public class PeopleController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @GetMapping("/{idPeople}")
-    public ResponseEntity<Object> getPeopleById(@PathVariable Long idPeople) {
+    public ResponseEntity<PeopleResponseDto> getPeopleById(@PathVariable Long idPeople) {
         return ResponseEntity.ok(peopleService.getPeopleById(idPeople));
     }
 
@@ -73,7 +75,7 @@ public class PeopleController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @PutMapping("/{idPeople}")
-    public ResponseEntity<Object> updatePeople(@PathVariable Long idPeople, @RequestBody
+    public ResponseEntity<PeopleResponseDto> updatePeople(@PathVariable Long idPeople, @RequestBody
     @Valid PeopleRequestDto peopleRequestDto) {
         return ResponseEntity.ok(peopleService.updatePeople(idPeople, peopleRequestDto));
     }
@@ -88,7 +90,7 @@ public class PeopleController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @DeleteMapping("/{idPerson}")
-    public ResponseEntity<Object> deletePeople(@PathVariable Long idPerson) {
+    public ResponseEntity<String> deletePeople(@PathVariable Long idPerson) {
         return ResponseEntity.ok(peopleService.deletePeople(idPerson));
     }
 }

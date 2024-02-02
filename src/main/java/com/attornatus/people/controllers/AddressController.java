@@ -1,6 +1,7 @@
 package com.attornatus.people.controllers;
 
 import com.attornatus.people.models.dto.request.AddressRequestDto;
+import com.attornatus.people.models.dto.response.AddressResponseDto;
 import com.attornatus.people.services.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController()
 @RequestMapping(value = "addresses")
@@ -30,7 +33,7 @@ public class AddressController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @PostMapping
-    public ResponseEntity<Object> registerAddress(@RequestBody @Valid AddressRequestDto addressRequestDto) {
+    public ResponseEntity<AddressResponseDto> registerAddress(@RequestBody @Valid AddressRequestDto addressRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.registerAddress(addressRequestDto));
     }
 
@@ -44,7 +47,7 @@ public class AddressController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @GetMapping("/list-address/{idPeople}")
-    public ResponseEntity<Object> getAllAddress(@PathVariable Long idPeople) {
+    public ResponseEntity<List<AddressResponseDto>> getAllAddress(@PathVariable Long idPeople) {
         return ResponseEntity.ok(addressService.getAllAddress(idPeople));
     }
 
@@ -58,7 +61,7 @@ public class AddressController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @GetMapping("/{idAddress}")
-    public ResponseEntity<Object> getAddressById(@PathVariable Long idAddress) {
+    public ResponseEntity<AddressResponseDto> getAddressById(@PathVariable Long idAddress) {
         return ResponseEntity.ok(addressService.getAddressById(idAddress));
     }
 
@@ -72,7 +75,7 @@ public class AddressController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @PutMapping("/{idAddress}")
-    public ResponseEntity<Object> updateAddress(@PathVariable Long idAddress,
+    public ResponseEntity<AddressResponseDto> updateAddress(@PathVariable Long idAddress,
                                                 @RequestBody @Valid AddressRequestDto addressRequestDto) {
         return ResponseEntity.ok(addressService.updateAddress(idAddress, addressRequestDto));
     }
@@ -87,7 +90,7 @@ public class AddressController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro interno do servidor"),
     })
     @DeleteMapping("/{idAddress}")
-    public ResponseEntity<Object> deleteAddress(@PathVariable Long idAddress) {
+    public ResponseEntity<String> deleteAddress(@PathVariable Long idAddress) {
         return ResponseEntity.ok(addressService.deleteAddress(idAddress));
     }
 }
