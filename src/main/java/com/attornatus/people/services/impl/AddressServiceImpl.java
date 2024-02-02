@@ -55,7 +55,9 @@ public class AddressServiceImpl implements AddressService {
     @Transactional(readOnly = true)
     public List<AddressResponseDto> getAllAddress(Long idPeople) {
 
-        return addressMapper.toListAddressResponse(validateListAddress(idPeople));
+        List<Address> addressList = validateListAddress(idPeople);
+
+        return addressMapper.toListAddressResponse(addressList);
     }
 
     @Override

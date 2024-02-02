@@ -31,8 +31,15 @@ class PeopleServiceImplTest {
     public static final long ID = 1L;
     public static final String NAME = "João";
     public static final LocalDate BIRTH_DATE = LocalDate.of(1997, 7, 15);
+    public static final String CPF = "111.222.333-44";
     public static final List<Address> ADDRESSES = new ArrayList<>();
+    public static final List<Long> IDS_ADDRESS = new ArrayList<>();
     public static final int INDEX = 0;
+
+    static {
+        Long idAddress = 1L;
+        IDS_ADDRESS.add(idAddress);
+    }
 
     @Autowired
     private PeopleServiceImpl peopleServiceImpl;
@@ -56,10 +63,10 @@ class PeopleServiceImplTest {
 
     @Test
     void whenCreateThenReturnSuccess() {
-        when(peopleRepository.save(Mockito.any())).thenReturn(people);
         when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+        when(peopleRepository.save(Mockito.any())).thenReturn(people);
 
-
+        peopleServiceImpl.existingPeople(peopleRequestDto.getCpf());
         PeopleResponseDto response = peopleServiceImpl.registerPeople(peopleRequestDto);
 
         assertNotNull(response);
@@ -67,7 +74,8 @@ class PeopleServiceImplTest {
         assertEquals(ID, response.getIdPeople());
         assertEquals(NAME, response.getName());
         assertEquals(BIRTH_DATE, response.getBirthDate());
-        assertEquals(ADDRESSES, response.getAddresses());
+        assertEquals(CPF, response.getCpf());
+        assertEquals(IDS_ADDRESS, response.getIdsAddress());
     }
 
     @Test
@@ -86,10 +94,9 @@ class PeopleServiceImplTest {
     @Test
     void whenFindAllThenReturnAnListOfPeople() {
         when(peopleRepository.findAll()).thenReturn(List.of(people));
-        when(peopleMapper.toPeopleResponseDto(Mockito.any())).thenReturn(peopleResponseDto);
+        when(peopleMapper.toListPeopleResponse(Mockito.any())).thenReturn(List.of(peopleResponseDto));
 
         List<PeopleResponseDto> response = peopleServiceImpl.getAllPeople();
-
 
         assertNotNull(response);
         assertEquals(1, response.size());
@@ -98,7 +105,8 @@ class PeopleServiceImplTest {
         assertEquals(ID, response.get(INDEX).getIdPeople());
         assertEquals(NAME, response.get(INDEX).getName());
         assertEquals(BIRTH_DATE, response.get(INDEX).getBirthDate());
-        assertEquals(ADDRESSES, response.get(INDEX).getAddresses());
+        assertEquals(CPF, response.get(INDEX).getCpf());
+        assertEquals(IDS_ADDRESS, response.get(INDEX).getIdsAddress());
     }
 
     @Test
@@ -127,7 +135,7 @@ class PeopleServiceImplTest {
         try {
             peopleServiceImpl.validateListPeople();
         } catch (Exception ex) {
-            assertEquals("Nenhuma pessoa encontrada!", ex.getMessage());
+            assertEquals("Pessoa não localizada", ex.getMessage());
         }
     }
 
@@ -143,7 +151,8 @@ class PeopleServiceImplTest {
         assertEquals(ID, response.getIdPeople());
         assertEquals(NAME, response.getName());
         assertEquals(BIRTH_DATE, response.getBirthDate());
-        assertEquals(ADDRESSES, response.getAddresses());
+        assertEquals(CPF, response.getCpf());
+        assertEquals(IDS_ADDRESS, response.getIdsAddress());
     }
 
     @Test
@@ -198,7 +207,8 @@ class PeopleServiceImplTest {
         assertEquals(ID, response.getIdPeople());
         assertEquals(NAME, response.getName());
         assertEquals(BIRTH_DATE, response.getBirthDate());
-        assertEquals(ADDRESSES, response.getAddresses());
+        assertEquals(CPF, response.getCpf());
+        assertEquals(IDS_ADDRESS, response.getIdsAddress());
     }
 
     @Test
@@ -256,8 +266,9 @@ class PeopleServiceImplTest {
     }
 
     private void startPeople() {
-        people = new People(ID, NAME, BIRTH_DATE, ADDRESSES);
-        peopleResponseDto = new PeopleResponseDto(ID, NAME, BIRTH_DATE, ADDRESSES);
-        optionalPeople = Optional.of(new People(ID, NAME, BIRTH_DATE, ADDRESSES));
+        people = new People(ID, NAME, BIRTH_DATE,CPF , ADDRESSES);
+        peopleResponseDto = new PeopleResponseDto(ID, NAME, BIRTH_DATE,CPF , IDS_ADDRESS);
+        peopleRequestDto = new PeopleRequestDto(NAME, BIRTH_DATE,CPF);
+        optionalPeople = Optional.of(new People(ID, NAME, BIRTH_DATE,CPF ,ADDRESSES));
     }
 }

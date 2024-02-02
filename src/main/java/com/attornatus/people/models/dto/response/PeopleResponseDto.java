@@ -1,6 +1,5 @@
 package com.attornatus.people.models.dto.response;
 
-import com.attornatus.people.models.entity.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +21,5 @@ public class PeopleResponseDto {
 
     private String cpf;
 
-    private List<Address> addresses = new ArrayList<>();
+    private List<Long> idsAddress = new ArrayList<>();
 }

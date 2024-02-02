@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -46,9 +43,9 @@ public class Address implements Serializable {
     @NotNull
     private boolean mainAddress;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "id_people")
+    @ToString.Exclude
     @NotNull
+    @JoinColumn(name = "id_people")
+    @ManyToOne
     private People people;
 }
