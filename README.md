@@ -47,8 +47,6 @@
     -   Inform The People Main Address
 ---
 
-
-
 ### 🏙️Address Controller :
 
 #### POST:
